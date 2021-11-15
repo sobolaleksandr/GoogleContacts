@@ -1,7 +1,7 @@
 ﻿namespace GoogleContacts.App.Commands
 {
     using System;
-    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
 
@@ -14,13 +14,12 @@
     /// </summary>
     public class EditCommand : ICommand
     {
-        public EditCommand(List<PersonModel> people)
+        public EditCommand(ObservableCollection<ContactModel> contacts)
         {
-            People = people;
+            Contacts = contacts;
         }
 
-     
-        public List<PersonModel> People { get; }
+        public ObservableCollection<ContactModel> Contacts { get; set; }
 
         public bool CanExecute(object parameter)
         {
@@ -35,7 +34,11 @@
         /// <param name="parameter"> Вызывающий примитив. </param>
         public void Execute(object parameter)
         {
-            var selectedPerson = People.FirstOrDefault(person => person.IsSelected);
+            var selectedContact = Contacts.SelectMany(contact => contact.Contacts)
+                .FirstOrDefault(person => person.IsSelected);
+            if (!(selectedContact is PersonModel selectedPerson))
+                return;
+
             var vm = new PersonViewModel(selectedPerson);
             var window = new EditPersonView
             {

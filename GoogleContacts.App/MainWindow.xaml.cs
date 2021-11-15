@@ -1,7 +1,6 @@
 ﻿namespace GoogleContacts.App
 {
-    using System.Collections.Generic;
-    using System.Windows;
+    using System.Collections.ObjectModel;
 
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.Domain;
@@ -11,24 +10,19 @@
         public MainWindow()
         {
             InitializeComponent();
-            var people = new List<ContactModel>
+            var people = new ObservableCollection<ContactModel>
             {
-                new PersonModel("Test1","Test1","Test1","Test1"),
-                new PersonModel("Test2","Test2","Test2","Test2")
+                new PersonModel("Test1", "Test1", "Test1", "Test1"),
+                new PersonModel("Test2", "Test2", "Test2", "Test2")
             };
 
-            var groups = new List<ContactModel>
+            var groups = new ObservableCollection<ContactModel>
             {
                 new GroupModel("TestGroup1"),
                 new GroupModel("TestGroup2"),
             };
 
-            DataContext = new ApplicationViewModel(people,groups);
-        }
-
-        private void SetSelectedNodeVM(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            //TODO: Try prisma framework
+            DataContext = new ApplicationViewModel(people, groups);
         }
     }
 }

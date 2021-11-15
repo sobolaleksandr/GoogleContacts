@@ -1,6 +1,7 @@
 ﻿namespace GoogleContacts.App.ViewModels
 {
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.Windows;
 
     using GoogleContacts.App.Commands;
@@ -8,18 +9,26 @@
 
     public class ApplicationViewModel
     {
-        public ApplicationViewModel(List<ContactModel> people, List<ContactModel> groups)
+        public ApplicationViewModel(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
         {
             CommitCommand = new CommitCommand();
-            Entities = new List<Entity>()
+            Contacts = new ObservableCollection<ContactModel>
             {
-                new Entity("Контакты",people),
-                new Entity("Группы",people),
+                new ContactModel
+                {
+                    Name = "Контакты",
+                    Contacts = people
+                },
+                new ContactModel
+                {
+                    Name = "Группы",
+                    Contacts = groups
+                }
             };
-            EditCommand = new EditCommand(new List<PersonModel>());
-        }
 
-        public List<Entity> Entities { get; set; }
+            EditCommand = new EditCommand(Contacts);
+
+        }
 
         public CommitCommand CommitCommand { get; set; }
 
@@ -29,22 +38,13 @@
 
         public List<PersonModel> People { get; set; }
 
+        public ObservableCollection<ContactModel> Contacts { get; set; }
+
+        public string Name => "Autocad Plugin";
+
         /// <summary>
         /// Заголовок окна.
         /// </summary>
         public static string WindowTitle => "Autocad Plugin";
-    }
-
-    public class Entity
-    {
-        public Entity(string header, List<ContactModel> contacts)
-        {
-            Header = header;
-            Contacts = contacts;
-        }
-
-        public string Header { get; set; }
-
-        public List<ContactModel> Contacts { get; set; }
     }
 }

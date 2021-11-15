@@ -11,9 +11,6 @@
         Height="500" Width="560" d:DataContext="{d:DesignInstance domain:ContactModel}">
     <Window.Resources>
         <ResourceDictionary>
-            <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="Views/EditViewStyle.xaml" />
-            </ResourceDictionary.MergedDictionaries>
 
             <Style x:Key="LibraryTreeViewItemStyle"
                    TargetType="{x:Type TreeViewItem}">
@@ -21,6 +18,8 @@
                         Value="{Binding IsSelected, Mode=TwoWay}" />
                 <Setter Property="FontWeight"
                         Value="Normal" />
+                <Setter Property="IsExpanded" Value="True" />
+
                 <Style.Triggers>
                     <Trigger Property="IsSelected"
                              Value="True">
@@ -29,19 +28,22 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
+
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/EditViewStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
+
     <Grid d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TreeView 
-            ItemsSource ="{Binding Entities}"
-            SelectedItemChanged ="SetSelectedNodeVM"/>
-        <!--<TreeView Grid.Row="0">
+            ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}"
+            ItemsSource="{Binding Contacts}">
             <TreeView.Template>
                 <ControlTemplate>
                     <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
@@ -49,34 +51,21 @@
                     </ScrollViewer>
                 </ControlTemplate>
             </TreeView.Template>
-            <TreeViewItem 
-                          ItemsSource="{Binding Entities}"
-                          d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel}" IsExpanded="True">
-                <TreeViewItem.ItemTemplate>
-                    <HierarchicalDataTemplate>
-                        <StackPanel>
-                            <TreeViewItem ItemsSource="{Binding Contacts}" Header="{Binding Header}"  >
-                                <TreeViewItem.ItemTemplate >
-                                    <HierarchicalDataTemplate ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}">
-                                        <StackPanel Orientation="Vertical">
-                                            <Label Content="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center" />
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeViewItem.ItemTemplate>
-                            </TreeViewItem>
-                        </StackPanel>
-                    </HierarchicalDataTemplate>
-                </TreeViewItem.ItemTemplate>
-            </TreeViewItem>
-        </TreeView>-->
 
-        <Border Grid.Row="2" Grid.Column="0" BorderBrush="Gray" Background="LightGray" BorderThickness="2">
+            <TreeView.ItemTemplate>
+                <HierarchicalDataTemplate ItemsSource="{Binding Contacts}">
+                    <TextBlock Text="{Binding Name}" />
+                </HierarchicalDataTemplate>
+            </TreeView.ItemTemplate>
+        </TreeView>
+
+        <Border Grid.Row="1" Grid.Column="0" BorderBrush="Gray" Background="LightGray" BorderThickness="2">
             <StackPanel Height="Auto" Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Применить изменения"
                         Command="{Binding CommitCommand}"
                         views:DialogResultButton.DialogResult="True" />
                 <Button Content="Редактировать"
-                        Command="{Binding EditCommand}"/>
+                        Command="{Binding EditCommand}" />
                 <Button Content="Отменить"
                         views:DialogResultButton.DialogResult="False" />
             </StackPanel>

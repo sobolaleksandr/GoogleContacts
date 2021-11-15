@@ -1,11 +1,23 @@
 ﻿namespace GoogleContacts.Domain
 {
-    public abstract class ContactModel
+    using System.Collections.ObjectModel;
+
+    public class ContactModel
     {
+        public ContactModel()
+        {
+            Contacts = new ObservableCollection<ContactModel>();
+        }
+
+        public ObservableCollection<ContactModel> Contacts { get; set; }
+
         public bool IsSelected { get; set; }
 
         public string Name { get; set; }
 
-        public static string WindowTitle => "GoogleContacts";
+        /// <summary>
+        /// Заголовок окна.
+        /// </summary>
+        public static string WindowTitle => "Autocad Plugin";
     }
 }
