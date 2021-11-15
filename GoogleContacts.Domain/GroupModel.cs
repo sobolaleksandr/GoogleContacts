@@ -1,41 +1,39 @@
-﻿using Google.Apis.PeopleService.v1.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.Domain
 {
-    public class GroupModel
-    {
-        public string modelResourceName;
-        public string modelFormattedName;
-        public int modelMemberCount;
+    using Google.Apis.PeopleService.v1.Data;
 
-        private readonly string modelEtag;
+    /// <summary>
+    /// Модель группы.
+    /// </summary>
+    public class GroupModel : ContactModel
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        private readonly string _modelEtag;
+        public readonly string ModelResourceName;
+        public int ModelMemberCount;
+
+        public GroupModel(ContactGroup group)
+        {
+            ModelResourceName = group.ResourceName;
+            _modelEtag = group.ETag;
+            Name = group.FormattedName ?? string.Empty;
+            ModelMemberCount = group.MemberCount ?? 0;
+        }
+
+        public GroupModel(string name)
+        {
+            Name = name;
+        }
 
         public ContactGroup Map()
         {
             return new ContactGroup
             {
-                Name = modelFormattedName,
-                ETag = modelEtag
+                Name = Name,
+                ETag = _modelEtag
             };
         }
-
-        public GroupModel(ContactGroup group)
-        {
-            modelResourceName = group.ResourceName;
-            modelEtag = group.ETag;
-            modelFormattedName = group.FormattedName ?? "";
-            modelMemberCount = group.MemberCount ?? 0;
-        }
-
-        public GroupModel(string name)
-        {
-            modelFormattedName = name;
-        }   
-}
-
+    }
 }

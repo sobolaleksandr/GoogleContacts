@@ -3,56 +3,84 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:GoogleContacts.App"
-         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        xmlns:viewModels="clr-namespace:GoogleContacts.App.ViewModels"
+        xmlns:views="clr-namespace:GoogleContacts.App.Views"
+        xmlns:domain="clr-namespace:GoogleContacts.Domain;assembly=GoogleContacts.Domain"
+        mc:Ignorable="d"
+        Title="{Binding WindowTitle}"
+        Height="500" Width="560" d:DataContext="{d:DesignInstance domain:ContactModel}">
     <Window.Resources>
-        <Style TargetType="TextBlock">
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="FontSize" Value="14" />
-        </Style>
-        <Style TargetType="Button">
-            <Setter Property="Width" Value="40" />
-            <Setter Property="Margin" Value="5" />
-        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Views/EditViewStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="LibraryTreeViewItemStyle"
+                   TargetType="{x:Type TreeViewItem}">
+                <Setter Property="IsSelected"
+                        Value="{Binding IsSelected, Mode=TwoWay}" />
+                <Setter Property="FontWeight"
+                        Value="Normal" />
+                <Style.Triggers>
+                    <Trigger Property="IsSelected"
+                             Value="True">
+                        <Setter Property="FontWeight"
+                                Value="Bold" />
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
     </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="0.8*" />
-        </Grid.ColumnDefinitions>
+    <Grid d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <ListBox Grid.Column="0" ItemsSource="{Binding Phones}"
-                 SelectedItem="{Binding SelectedPhone}">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Margin="5">
-                        <TextBlock FontSize="18" Text="{Binding Path=Title}" />
-                        <TextBlock Text="{Binding Path=Company}" />
-                        <TextBlock Text="{Binding Path=Price}" />
-                    </StackPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
-        <StackPanel Grid.Row="1" Orientation="Horizontal">
-            <Button Command="{Binding AddCommand}">+</Button>
-            <Button Command="{Binding RemoveCommand}"
-                    CommandParameter="{Binding SelectedPhone}">-</Button>
-        </StackPanel>
 
-        <StackPanel Grid.Column="1" DataContext="{Binding SelectedPhone}">
-            <TextBlock Text="Выбранный элемент"  />
-            <TextBlock Text="Модель" />
-            <TextBox Text="{Binding Title, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Производитель" />
-            <TextBox Text="{Binding Company, UpdateSourceTrigger=PropertyChanged}" />
-            <TextBlock Text="Цена" />
-            <TextBox Text="{Binding Price, UpdateSourceTrigger=PropertyChanged}" />
-        </StackPanel>
+        <TreeView 
+            ItemsSource ="{Binding Entities}"
+            SelectedItemChanged ="SetSelectedNodeVM"/>
+        <!--<TreeView Grid.Row="0">
+            <TreeView.Template>
+                <ControlTemplate>
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                        <ItemsPresenter />
+                    </ScrollViewer>
+                </ControlTemplate>
+            </TreeView.Template>
+            <TreeViewItem 
+                          ItemsSource="{Binding Entities}"
+                          d:DataContext="{d:DesignInstance viewModels:ApplicationViewModel}" IsExpanded="True">
+                <TreeViewItem.ItemTemplate>
+                    <HierarchicalDataTemplate>
+                        <StackPanel>
+                            <TreeViewItem ItemsSource="{Binding Contacts}" Header="{Binding Header}"  >
+                                <TreeViewItem.ItemTemplate >
+                                    <HierarchicalDataTemplate ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}">
+                                        <StackPanel Orientation="Vertical">
+                                            <Label Content="{Binding Name, Mode=TwoWay}" VerticalAlignment="Center" />
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeViewItem.ItemTemplate>
+                            </TreeViewItem>
+                        </StackPanel>
+                    </HierarchicalDataTemplate>
+                </TreeViewItem.ItemTemplate>
+            </TreeViewItem>
+        </TreeView>-->
+
+        <Border Grid.Row="2" Grid.Column="0" BorderBrush="Gray" Background="LightGray" BorderThickness="2">
+            <StackPanel Height="Auto" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Применить изменения"
+                        Command="{Binding CommitCommand}"
+                        views:DialogResultButton.DialogResult="True" />
+                <Button Content="Редактировать"
+                        Command="{Binding EditCommand}"/>
+                <Button Content="Отменить"
+                        views:DialogResultButton.DialogResult="False" />
+            </StackPanel>
+        </Border>
+
     </Grid>
 </Window>

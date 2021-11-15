@@ -1,63 +1,62 @@
-﻿using Google.Apis.PeopleService.v1.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.Domain
 {
-    public class PersonModel
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Google.Apis.PeopleService.v1.Data;
+
+    public class PersonModel : ContactModel
     {
-        public string modelResourceName;
-
-        public string modelEtag;
-        public string modelGivenName;
-        public string modelFamilyName;
-        public string modelPhoneNumber;
-        public  string modelEmail;
-        private string modelOrganization;
+        private readonly string _modelOrganization;
+        public readonly string Email;
+        public readonly string ModelEtag;
+        public readonly string FamilyName;
+        public readonly string PhoneNumber;
+        public readonly string ModelResourceName;
         private ContactGroupMembership modelMembership;
-
-        public Person Map()
-        {
-            return new Person
-            {
-                ResourceName = modelResourceName,
-                ETag = modelEtag,
-                Names = new List<Name> { new Name {GivenName = modelGivenName, FamilyName = modelFamilyName } },
-                PhoneNumbers = new List<PhoneNumber> { new PhoneNumber { Value = modelPhoneNumber} },
-                EmailAddresses = new List<EmailAddress> { new EmailAddress { Value = modelEmail} },
-                Organizations = new List<Organization> { new Organization { Name  = modelOrganization } }
-            };
-        }
 
         public PersonModel(Person person)
         {
+            if (person == null)
+                throw new ArgumentNullException(nameof(person));
+
             var name = person.Names?.FirstOrDefault();
             var email = person.EmailAddresses?.FirstOrDefault();
             var phoneNumber = person.PhoneNumbers?.FirstOrDefault();
             var organization = person.Organizations?.FirstOrDefault();
             var membership = person.Memberships?.FirstOrDefault();
 
-            modelResourceName = person.ResourceName;
-            modelEtag = person.ETag;
+            ModelResourceName = person.ResourceName;
+            ModelEtag = person.ETag;
 
-            modelGivenName = name?.GivenName ?? "";
-            modelFamilyName = name?.FamilyName ?? "";
-            modelPhoneNumber = phoneNumber?.Value ?? "";
-            modelEmail = email?.Value ?? "";
-            modelOrganization = organization?.Name ?? "";
-            modelMembership = membership.ContactGroupMembership;
+            Name = name?.GivenName ?? string.Empty;
+            FamilyName = name?.FamilyName ?? string.Empty;
+            PhoneNumber = phoneNumber?.Value ?? string.Empty;
+            Email = email?.Value ?? string.Empty;
+            _modelOrganization = organization?.Name ?? string.Empty;
+            modelMembership = membership?.ContactGroupMembership;
         }
 
-        public PersonModel(string givenName, string familyName, string email, string phoneNumber)
+        public PersonModel(string name, string familyName, string email, string phoneNumber)
         {
-            modelGivenName = givenName;
-            modelFamilyName = familyName;
-            modelPhoneNumber = phoneNumber;
-            modelEmail = email;
+            Name = name;
+            FamilyName = familyName;
+            PhoneNumber = phoneNumber;
+            Email = email;
+        }
+
+        public Person Map()
+        {
+            return new Person
+            {
+                ResourceName = ModelResourceName,
+                ETag = ModelEtag,
+                Names = new List<Name> { new Name { GivenName = Name, FamilyName = FamilyName } },
+                PhoneNumbers = new List<PhoneNumber> { new PhoneNumber { Value = PhoneNumber } },
+                EmailAddresses = new List<EmailAddress> { new EmailAddress { Value = Email } },
+                Organizations = new List<Organization> { new Organization { Name = _modelOrganization } }
+            };
         }
     }
-
 }
