@@ -11,6 +11,7 @@
         /// 
         /// </summary>
         private readonly string _modelEtag;
+
         public readonly string ModelResourceName;
         public int ModelMemberCount;
 

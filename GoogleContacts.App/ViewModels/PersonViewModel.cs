@@ -11,12 +11,12 @@
         private string _givenName;
         private string _phoneNumber;
 
-        public PersonViewModel(PersonModel model)
+        public PersonViewModel(PersonModel person)
         {
-            Email = model.Email;
-            PhoneNumber = model.PhoneNumber;
-            GivenName = model.Name;
-            FamilyName = model.FamilyName;
+            Email = person.Email;
+            PhoneNumber = person.PhoneNumber;
+            GivenName = person.Name;
+            FamilyName = person.FamilyName;
         }
 
         public string Email
@@ -43,8 +43,6 @@
 
         public static string FamilyNameTitle => "Фамилия";
 
-        public static string GivenNameTitle => "Имя";
-
         public string GivenName
         {
             get => _givenName;
@@ -54,6 +52,8 @@
                 OnPropertyChanged();
             }
         }
+
+        public static string GivenNameTitle => "Имя";
 
         public string PhoneNumber
         {

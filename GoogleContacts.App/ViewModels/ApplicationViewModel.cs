@@ -9,7 +9,7 @@
 
     public class ApplicationViewModel
     {
-        public ApplicationViewModel(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
+        public ApplicationViewModel(IEnumerable<ContactModel> people, IEnumerable<ContactModel> groups)
         {
             CommitCommand = new CommitCommand();
             Contacts = new ObservableCollection<ContactModel>
@@ -17,12 +17,12 @@
                 new ContactModel
                 {
                     Name = "Контакты",
-                    Contacts = people
+                    Contacts = new ObservableCollection<ContactModel>(people)
                 },
                 new ContactModel
                 {
                     Name = "Группы",
-                    Contacts = groups
+                    Contacts = new ObservableCollection<ContactModel>(groups)
                 }
             };
 
@@ -45,6 +45,6 @@
         /// <summary>
         /// Заголовок окна.
         /// </summary>
-        public static string WindowTitle => "Autocad Plugin";
+        public static string WindowTitle => "GoogleContacts";
     }
 }

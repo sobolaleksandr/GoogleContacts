@@ -36,17 +36,34 @@
         {
             var selectedContact = Contacts.SelectMany(contact => contact.Contacts)
                 .FirstOrDefault(person => person.IsSelected);
-            if (!(selectedContact is PersonModel selectedPerson))
-                return;
 
-            var vm = new PersonViewModel(selectedPerson);
-            var window = new EditPersonView
+            switch (selectedContact)
             {
-                DataContext = vm
-            };
+                case PersonModel selectedPerson:
+                {
+                    var vm = new PersonViewModel(selectedPerson);
+                    var window = new EditPersonView
+                    {
+                        DataContext = vm
+                    };
 
-            if (window.ShowDialog() != true)
-                return;
+                    if (window.ShowDialog() != true)
+                        return;
+                    break;
+                }
+                case GroupModel selectedGroup:
+                {
+                    var vm = new GroupViewModel(selectedGroup);
+                    var window = new EditGroupView
+                    {
+                        DataContext = vm
+                    };
+
+                    if (window.ShowDialog() != true)
+                        return;
+                    break;
+                }
+            }
         }
     }
 }

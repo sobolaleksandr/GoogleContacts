@@ -14,10 +14,5 @@
         public bool IsSelected { get; set; }
 
         public string Name { get; set; }
-
-        /// <summary>
-        /// Заголовок окна.
-        /// </summary>
-        public static string WindowTitle => "Autocad Plugin";
     }
 }

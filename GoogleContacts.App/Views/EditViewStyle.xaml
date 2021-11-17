@@ -34,10 +34,26 @@
         <Setter Property="Width" Value="Auto" />
     </Style>
 
-    <Style TargetType="Button">
-        <Setter Property="Height" Value="25" />
+    <Style TargetType="Button" >
         <Setter Property="Margin" Value="5" />
-        <Setter Property="Padding" Value="15,0,15,0" />
+        <Setter Property="Padding" Value="5" />
+    </Style>
+
+    <Style x:Key="LibraryTreeViewItemStyle"
+           TargetType="{x:Type TreeViewItem}">
+        <Setter Property="IsSelected"
+                Value="{Binding IsSelected, Mode=TwoWay}" />
+        <Setter Property="FontWeight"
+                Value="Normal" />
+        <Setter Property="IsExpanded" Value="True" />
+
+        <Style.Triggers>
+            <Trigger Property="IsSelected"
+                     Value="True">
+                <Setter Property="FontWeight"
+                        Value="Bold" />
+            </Trigger>
+        </Style.Triggers>
     </Style>
 
     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
