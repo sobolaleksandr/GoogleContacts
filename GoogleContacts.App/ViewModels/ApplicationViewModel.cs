@@ -1,46 +1,40 @@
 ﻿namespace GoogleContacts.App.ViewModels
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Windows;
 
     using GoogleContacts.App.Commands;
     using GoogleContacts.Domain;
 
     public class ApplicationViewModel
     {
-        public ApplicationViewModel(IEnumerable<ContactModel> people, IEnumerable<ContactModel> groups)
+        public ApplicationViewModel(ObservableCollection<ContactModel> people,
+            ObservableCollection<ContactModel> groups)
         {
-            CommitCommand = new CommitCommand();
             Contacts = new ObservableCollection<ContactModel>
             {
-                new ContactModel
+                new ContactModel(string.Empty)
                 {
                     Name = "Контакты",
-                    Contacts = new ObservableCollection<ContactModel>(people)
+                    Contacts = people
                 },
-                new ContactModel
+                new ContactModel(string.Empty)
                 {
                     Name = "Группы",
-                    Contacts = new ObservableCollection<ContactModel>(groups)
+                    Contacts = groups
                 }
             };
 
-            EditCommand = new EditCommand(Contacts);
-
+            DeleteCommand = new DeleteCommand(people, groups);
+            EditCommand = new EditCommand(people, groups);
+            CreatePersonCommand = new CreatePersonCommand(people);
+            CreateGroupCommand = new CreateGroupCommand(groups);
         }
 
-        public CommitCommand CommitCommand { get; set; }
-
-        public EditCommand EditCommand { get; set; }
-
-        public List<GroupModel> Groups { get; set; }
-
-        public List<PersonModel> People { get; set; }
-
-        public ObservableCollection<ContactModel> Contacts { get; set; }
-
-        public string Name => "Autocad Plugin";
+        public ObservableCollection<ContactModel> Contacts { get; }
+        public CreateGroupCommand CreateGroupCommand { get; }
+        public CreatePersonCommand CreatePersonCommand { get; }
+        public DeleteCommand DeleteCommand { get; }
+        public EditCommand EditCommand { get; }
 
         /// <summary>
         /// Заголовок окна.

@@ -9,14 +9,14 @@
     public class PersonModel : ContactModel
     {
         private readonly string _modelOrganization;
-        public readonly string Email;
-        public readonly string ModelEtag;
-        public readonly string FamilyName;
-        public readonly string PhoneNumber;
-        public readonly string ModelResourceName;
+        public string Email { get; set; }
+        public string ModelEtag { get; set; }
+        public string FamilyName { get; set; }
+        public string PhoneNumber { get; set; }
+        public string ModelResourceName { get; set; }
         private ContactGroupMembership modelMembership;
 
-        public PersonModel(Person person)
+        public PersonModel(Person person, string error) : base(error)
         {
             if (person == null)
                 throw new ArgumentNullException(nameof(person));
@@ -38,7 +38,15 @@
             modelMembership = membership?.ContactGroupMembership;
         }
 
-        public PersonModel(string name, string familyName, string email, string phoneNumber)
+        public PersonModel(string name, string familyName, string email, string phoneNumber, string error) : base(error)
+        {
+            Name = name;
+            FamilyName = familyName;
+            PhoneNumber = phoneNumber;
+            Email = email;
+        }
+
+        public void ApplyFrom(string name, string familyName, string email, string phoneNumber)
         {
             Name = name;
             FamilyName = familyName;

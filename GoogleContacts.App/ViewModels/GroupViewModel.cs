@@ -8,6 +8,11 @@
     {
         private string _name;
 
+        public GroupViewModel()
+        {
+
+        }
+
         public GroupViewModel(GroupModel group)
         {
             Name = group.Name;

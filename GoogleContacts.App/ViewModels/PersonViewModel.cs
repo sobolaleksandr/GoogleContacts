@@ -19,6 +19,11 @@
             FamilyName = person.FamilyName;
         }
 
+        public PersonViewModel()
+        {
+
+        }
+
         public string Email
         {
             get => _email;

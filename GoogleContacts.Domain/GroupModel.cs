@@ -1,29 +1,39 @@
 ﻿namespace GoogleContacts.Domain
 {
+    using System;
+
     using Google.Apis.PeopleService.v1.Data;
+
+    using GoogleContacts.Domain.Annotations;
 
     /// <summary>
     /// Модель группы.
     /// </summary>
     public class GroupModel : ContactModel
     {
-        /// <summary>
-        /// 
-        /// </summary>
         private readonly string _modelEtag;
 
         public readonly string ModelResourceName;
-        public int ModelMemberCount;
 
-        public GroupModel(ContactGroup group)
+        public GroupModel([NotNull] ContactGroup group, string error) : base(error)
         {
+            if (group == null)
+                throw new ArgumentNullException(nameof(group));
+
             ModelResourceName = group.ResourceName;
             _modelEtag = group.ETag;
             Name = group.FormattedName ?? string.Empty;
-            ModelMemberCount = group.MemberCount ?? 0;
+
+            var memberCount = group.MemberCount ?? 0;
+            Name += " (" + memberCount + ")";
         }
 
-        public GroupModel(string name)
+        public GroupModel(string name, string error) : base(error)
+        {
+            Name = name;
+        }
+
+        public void ApplyFrom(string name)
         {
             Name = name;
         }
@@ -33,7 +43,7 @@
             return new ContactGroup
             {
                 Name = Name,
-                ETag = _modelEtag
+                ETag = _modelEtag ?? string.Empty
             };
         }
     }

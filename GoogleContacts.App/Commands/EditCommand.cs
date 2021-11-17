@@ -1,6 +1,7 @@
 ﻿namespace GoogleContacts.App.Commands
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Windows.Input;
@@ -14,12 +15,15 @@
     /// </summary>
     public class EditCommand : ICommand
     {
-        public EditCommand(ObservableCollection<ContactModel> contacts)
+        public EditCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
         {
-            Contacts = contacts;
+            People = people;
+            Groups = groups;
         }
 
-        public ObservableCollection<ContactModel> Contacts { get; set; }
+        public ObservableCollection<ContactModel> Groups { get; set; }
+
+        public ObservableCollection<ContactModel> People { get; set; }
 
         public bool CanExecute(object parameter)
         {
@@ -32,10 +36,10 @@
         /// Изменение модели примитива.
         /// </summary>
         /// <param name="parameter"> Вызывающий примитив. </param>
-        public void Execute(object parameter)
+        public async void Execute(object parameter)
         {
-            var selectedContact = Contacts.SelectMany(contact => contact.Contacts)
-                .FirstOrDefault(person => person.IsSelected);
+            var selectedContact = People.FirstOrDefault(person => person.IsSelected) ??
+                                  Groups.FirstOrDefault(group => group.IsSelected);
 
             switch (selectedContact)
             {
@@ -49,6 +53,11 @@
 
                     if (window.ShowDialog() != true)
                         return;
+
+                    selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber);
+                    var peopleService = NinjectKernel.Get<IPeopleService>();
+                    await peopleService.UpdateContact(selectedPerson);
+
                     break;
                 }
                 case GroupModel selectedGroup:
@@ -61,6 +70,11 @@
 
                     if (window.ShowDialog() != true)
                         return;
+
+                    selectedGroup.ApplyFrom(vm.Name);
+                    var groupService = NinjectKernel.Get<IGroupService>();
+                    await groupService.UpdateGroup(selectedGroup);
+
                     break;
                 }
             }

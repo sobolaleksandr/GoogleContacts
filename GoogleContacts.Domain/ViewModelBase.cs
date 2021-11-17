@@ -1,9 +1,9 @@
-﻿namespace GoogleContacts.App.ViewModels
+﻿namespace GoogleContacts.Domain
 {
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using GoogleContacts.App.Commands;
+    using GoogleContacts.Domain.Annotations;
 
     /// <summary>
     /// Базовый класс для моделей представления.
@@ -14,20 +14,6 @@
         /// Поле свойства <see cref="IsChanged"/>.
         /// </summary>
         private bool _isChanged;
-
-        /// <summary>
-        /// Базовый класс для моделей представления.
-        /// </summary>
-        protected ViewModelBase()
-        {
-            ApplyCommand = new ApplyCommand();
-            RestoreCommand = new RestoreCommand();
-        }
-
-        /// <summary>
-        /// Команда принятия изменений примитива.
-        /// </summary>
-        public ApplyCommand ApplyCommand { get; set; }
 
         /// <summary>
         /// Примитив изменен.
@@ -43,14 +29,18 @@
         }
 
         /// <summary>
-        /// Команда восстановления примитива.
-        /// </summary>
-        public RestoreCommand RestoreCommand { get; set; }
-
-        /// <summary>
         /// Событие, генерируемое при изменении свойств.
         /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
+
+        /// <summary>
+        /// Метод генерации события при изменении определенного свойства.
+        /// </summary>
+        [NotifyPropertyChangedInvocator]
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         /// <summary>
         /// Валидация значений с плавающей точкой.
@@ -61,16 +51,6 @@
         protected string ValidateDouble(string value, string title)
         {
             return !double.TryParse(value, out _) ? $@"В поле '{title}' должно быть число!" : string.Empty;
-        }
-
-        /// <summary>
-        /// Метод генерации события при изменении определенного свойства.
-        /// </summary>
-        [NotifyPropertyChangedInvocator]
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-            ApplyCommand.RaiseCanExecuteChanged();
         }
     }
 }

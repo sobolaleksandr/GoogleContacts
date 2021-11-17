@@ -2,10 +2,13 @@
 {
     using System.Collections.ObjectModel;
 
-    public class ContactModel
+    public class ContactModel : ViewModelBase
     {
-        public ContactModel()
+        private string _name;
+
+        public ContactModel(string error)
         {
+            Error = error;
             Contacts = new ObservableCollection<ContactModel>();
         }
 
@@ -13,6 +16,16 @@
 
         public bool IsSelected { get; set; }
 
-        public string Name { get; set; }
+        public string Error { get; set; }
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
     }
 }
