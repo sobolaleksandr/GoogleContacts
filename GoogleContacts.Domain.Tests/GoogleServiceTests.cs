@@ -15,7 +15,7 @@ namespace GoogleContacts.Domain.Tests
     {
         public GoogleServiceTests()
         {
-            GoogleService.Initialize();
+            //GoogleService.Initialize();
             _groupModel = new GroupModel(GROUP_NAME, string.Empty);
         }
 
@@ -26,7 +26,7 @@ namespace GoogleContacts.Domain.Tests
         //[Fact, TestPriority(3)]
         //public async Task GetGroups_Initialized_ReturnsGroups()
         //{
-        //    List<GroupModel> groups = await GoogleService.GetGroups();
+        //    List<GroupModel> groups = await GoogleService.Get();
 
         //    Assert.Equal(11, groups.Count);
         //}
@@ -34,7 +34,7 @@ namespace GoogleContacts.Domain.Tests
         //[Fact]
         //public async Task GetGroups_NotInitialized_ReturnsNull()
         //{
-        //    List<GroupModel> groups = await GoogleService.GetGroups();
+        //    List<GroupModel> groups = await GoogleService.Get();
 
         //    Assert.Null(groups);
         //}
@@ -45,7 +45,7 @@ namespace GoogleContacts.Domain.Tests
         //    GoogleService.Initialize();
         //    GroupModel groupModel = null;
 
-        //    GroupModel group = await GoogleService.CreateGroup(groupModel);
+        //    GroupModel group = await GoogleService.Create(groupModel);
 
         //    Assert.Null(group);
         //}
@@ -55,7 +55,7 @@ namespace GoogleContacts.Domain.Tests
         //{
         //    GroupModel groupModel = new("TestName");
 
-        //    GroupModel group = await GoogleService.CreateGroup(groupModel);
+        //    GroupModel group = await GoogleService.Create(groupModel);
 
         //    Assert.Null(group);
         //}
@@ -68,25 +68,25 @@ namespace GoogleContacts.Domain.Tests
             var properties = "names,emailAddresses"; // "emailAddresses";
             var personFields = "names,emailAddresses,phoneNumbers,organizations,memberships";
             var resources = new List<string> { "people/c8717037971012891222" };
-            GoogleService.Initialize();
-            //var groups = await GoogleService.GetGroups();
-            //GroupModel group = await GoogleContacts.CreateGroup(groupModel);
+            //GoogleService.Initialize();
+            //var groups = await GoogleService.Get();
+            //GroupModel group = await GoogleContacts.Create(groupModel);
             //var modGroup = await GoogleContacts.ModifyGroup("contactGroups/2f4d42e08a6f5e7f",resources);
             //groupModel.modelResourceName = "contactGroups/2f4d42e08a6f5e7f";
-            //var updated = await GoogleContacts.UpdateGroup(groups.FirstOrDefault());
-            //GoogleContacts.CreateContact(personModel);
-            //var model = (await GoogleService.GetContacts(personFields)).FirstOrDefault();
+            //var updated = await GoogleContacts.Update(groups.FirstOrDefault());
+            //GoogleContacts.Create(personModel);
+            //var model = (await GoogleService.Get(personFields)).FirstOrDefault();
             //model.modelEmail = "JohnD@yahoo.com";
             //var model = (await GoogleContacts.SearchContact(query, properties)).FirstOrDefault();
-            //await GoogleContacts.UpdateContact(model, personFields);
-            //await GoogleContacts.TryToDeleteContact(model);
+            //await GoogleContacts.Update(model, personFields);
+            //await GoogleContacts.Delete(model);
         }
 
         //[Fact]
         //[TestPriority(0)]
         //public async Task CreateGroup_WithGroup_ReturnsGroup()
         //{
-        //    var result = await GoogleService.CreateGroup(_groupModel);
+        //    var result = await GoogleService.Create(_groupModel);
 
         //    Assert.Equal(GROUP_NAME, result.Name);
         //}
@@ -95,9 +95,9 @@ namespace GoogleContacts.Domain.Tests
         //[TestPriority(2)]
         //public async Task DeleteGroup_WithGroup_ReturnsGroup()
         //{
-        //    var groupModel = (await GoogleService.GetGroups()).FirstOrDefault();
+        //    var groupModel = (await GoogleService.Get()).FirstOrDefault();
 
-        //    var result = await GoogleService.DeleteGroup(groupModel);
+        //    var result = await GoogleService.Delete(groupModel);
 
         //    Assert.True(result);
         //}
@@ -106,12 +106,12 @@ namespace GoogleContacts.Domain.Tests
         //[TestPriority(1)]
         //public async Task UpdateGroup_WithGroup_ReturnsGroup()
         //{
-        //    var groupModels = await GoogleService.GetGroups();
+        //    var groupModels = await GoogleService.Get();
         //    var groupModel = groupModels.FirstOrDefault();
 
         //    Assert.NotNull(groupModel);
         //    groupModel.Name = CHANGED_GROUP_NAME;
-        //    groupModel = await GoogleService.UpdateGroup(groupModel);
+        //    groupModel = await GoogleService.Update(groupModel);
         //    Assert.Equal(CHANGED_GROUP_NAME, groupModel.Name);
         //}
     }

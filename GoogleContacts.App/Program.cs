@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.ObjectModel;
-    using System.Linq;
     using System.Threading.Tasks;
     using System.Windows;
 
@@ -12,40 +11,47 @@
 
     internal static class Program
     {
-        // TODO: Implement disposable pattern for GroupService and People Service
+        private static readonly bool Debug = false;
+
         [STAThread]
         private static void Main()
         {
-            NinjectKernel.RebindSingleton<IPeopleService, PeopleServiceMock>();
-            //NinjectKernel.RebindSingleton<IGroupService, GroupServiceMock>();
-            NinjectKernel.RebindSingleton<IGroupService, GroupService>();
+            if (Debug)
+            {
+                NinjectKernel.RebindSingleton<IPeopleService, PeopleServiceMock>();
+                NinjectKernel.RebindSingleton<IGroupService, GroupServiceMock>();
+            }
+            else
+            {
+                NinjectKernel.RebindSingleton<IPeopleService, PeopleService>();
+                NinjectKernel.RebindSingleton<IGroupService, GroupService>();
+            }
+
             var peopleService = NinjectKernel.Get<IPeopleService>();
             var groupService = NinjectKernel.Get<IGroupService>();
 
             while (true)
             {
-                var people = Task.Run(async () => await peopleService.GetContacts()).GetAwaiter().GetResult();
-                var groups = Task.Run(async () => await groupService.GetGroups()).GetAwaiter().GetResult();
+                var people = Task.Run(async () => await peopleService.Get()).GetAwaiter().GetResult();
+                var groups = Task.Run(async () => await groupService.Get()).GetAwaiter().GetResult();
 
-                if (groups.All(group => string.IsNullOrEmpty(group.Error)))
+                var window = new MainWindow
                 {
-                    var window = new MainWindow
-                    {
-                        DataContext = new ApplicationViewModel(new ObservableCollection<ContactModel>(people),
-                            new ObservableCollection<ContactModel>(groups))
-                    };
+                    DataContext = new ApplicationViewModel(new ObservableCollection<ContactModel>(people),
+                        new ObservableCollection<ContactModel>(groups))
+                };
 
-                    if (window.ShowDialog() == true)
-                        continue;
+                if (window.ShowDialog() == true)
+                    continue;
 
-                    groupService.Stop();
+                if (groupService is IDisposable disposableGroup && peopleService is IDisposable disposablePeople)
+                {
+                    disposablePeople.Dispose();
+                    disposableGroup.Dispose();
                     return;
                 }
 
-                foreach (var group in groups.Where(group => !string.IsNullOrEmpty(group.Error)))
-                {
-                    MessageBox.Show(group.Error);
-                }
+                MessageBox.Show(groupService.GetType() + peopleService.GetType().ToString());
             }
         }
     }

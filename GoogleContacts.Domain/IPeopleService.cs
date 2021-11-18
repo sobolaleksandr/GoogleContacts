@@ -5,9 +5,9 @@
 
     public interface IPeopleService
     {
-        Task<PersonModel> CreateContact(PersonModel personModel);
-        Task<List<ContactModel>> GetContacts();
-        Task<bool> TryToDeleteContact(PersonModel personModel);
-        Task<PersonModel> UpdateContact(PersonModel personModel);
+        Task<ContactModel> Create(PersonModel model);
+        Task<string> Delete(PersonModel model);
+        Task<List<ContactModel>> Get();
+        Task<ContactModel> Update(PersonModel model);
     }
 }

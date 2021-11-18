@@ -5,38 +5,26 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    using Google.Apis.PeopleService.v1;
-    using Google.Apis.PeopleService.v1.Data;
-
     // ReSharper disable once ClassNeverInstantiated.Global
     // Created in DI
-    public class GroupService : BaseService, IGroupService
+    public class PeopleService : BaseService, IPeopleService
     {
-        private readonly ContactGroupsResource _groupsResource;
+        private const string PERSON_FIELDS = "names,emailAddresses,phoneNumbers,organizations,memberships";
 
-        public GroupService()
-        {
-            _groupsResource = new ContactGroupsResource(Service);
-        }
-
-        public async Task<ContactModel> Create(GroupModel model)
+        //TODO: cancelation token
+        public async Task<ContactModel> Create(PersonModel model)
         {
             if (model == null)
                 return new ContactModel("Empty model");
 
-            var group = model.Map();
-            var request = new CreateContactGroupRequest
-            {
-                ContactGroup = group
-            };
-
-            var createRequest = _groupsResource.Create(request);
+            var person = model.Map();
+            var request = Service.People.CreateContact(person);
 
             try
             {
-                var response = await createRequest.ExecuteAsync();
+                var response = await request.ExecuteAsync();
                 return response != null
-                    ? new GroupModel(response, string.Empty)
+                    ? new PersonModel(response, string.Empty)
                     : new ContactModel("Unexpected error");
             }
             catch (Exception exception)
@@ -45,12 +33,12 @@
             }
         }
 
-        public async Task<string> Delete(GroupModel model)
+        public async Task<string> Delete(PersonModel model)
         {
             if (model == null)
                 return "Empty model";
 
-            var request = _groupsResource.Delete(model.ModelResourceName);
+            var request = Service.People.DeleteContact(model.ModelResourceName);
 
             try
             {
@@ -65,13 +53,15 @@
 
         public async Task<List<ContactModel>> Get()
         {
-            var request = _groupsResource.List();
+            var request = Service.People.Connections.List("people/me");
+            request.PersonFields = PERSON_FIELDS;
 
             try
             {
-                var response = await request.ExecuteAsync();
-                return response.ContactGroups
-                    .Select(group => (ContactModel)new GroupModel(group, string.Empty))
+                var connectionsResponse = await request.ExecuteAsync();
+                var connections = connectionsResponse.Connections;
+                return connections
+                    .Select(person => (ContactModel)new PersonModel(person, string.Empty))
                     .ToList();
             }
             catch (Exception exception)
@@ -80,20 +70,19 @@
             }
         }
 
-        public async Task<ContactModel> Update(GroupModel model)
+        public async Task<ContactModel> Update(PersonModel model)
         {
             if (model == null)
                 return new ContactModel("Empty model");
 
-            var request = new UpdateContactGroupRequest
-            {
-                ContactGroup = model.Map()
-            };
+            var person = model.Map();
+            var request = Service.People.UpdateContact(person, model.ModelResourceName);
+            request.UpdatePersonFields = PERSON_FIELDS;
 
             try
             {
-                var response = await _groupsResource.Update(request, model.ModelResourceName).ExecuteAsync();
-                return new GroupModel(response, string.Empty);
+                var response = await request.ExecuteAsync();
+                return new PersonModel(response, string.Empty);
             }
             catch (Exception exception)
             {

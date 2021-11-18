@@ -14,9 +14,9 @@
 
         public ObservableCollection<ContactModel> Contacts { get; set; }
 
-        public bool IsSelected { get; set; }
+        public string Error { get; }
 
-        public string Error { get; set; }
+        public bool IsSelected { get; set; }
 
         public string Name
         {

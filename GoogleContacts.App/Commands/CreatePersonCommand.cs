@@ -26,7 +26,7 @@
 
             var peopleService = NinjectKernel.Get<IPeopleService>();
             var createdContact =
-                await peopleService.CreateContact(new PersonModel(vm.GivenName, vm.FamilyName, vm.Email,
+                await peopleService.Create(new PersonModel(vm.GivenName, vm.FamilyName, vm.Email,
                     vm.PhoneNumber, string.Empty));
 
             Contacts.Add(createdContact);

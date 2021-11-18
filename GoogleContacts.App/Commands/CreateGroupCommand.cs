@@ -26,7 +26,7 @@
 
             var groupService = NinjectKernel.Get<IGroupService>();
             var createdContact = new GroupModel(vm.Name, string.Empty);
-            var result = await groupService.CreateGroup(createdContact);
+            var result = await groupService.Create(createdContact);
             var error = result.Error;
             if (string.IsNullOrEmpty(error))
                 Contacts.Add(result);

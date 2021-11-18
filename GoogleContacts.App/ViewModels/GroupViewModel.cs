@@ -15,7 +15,7 @@
 
         public GroupViewModel(GroupModel group)
         {
-            Name = group.Name;
+            Name = group.FormattedName;
         }
 
         public string Name

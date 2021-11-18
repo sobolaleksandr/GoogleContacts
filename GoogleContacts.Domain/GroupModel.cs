@@ -11,9 +11,10 @@
     /// </summary>
     public class GroupModel : ContactModel
     {
-        private readonly string _modelEtag;
-
-        public readonly string ModelResourceName;
+        private string _modelEtag;
+        public string ModelResourceName;
+        private int _memberCount;
+        public string FormattedName { get; set; }
 
         public GroupModel([NotNull] ContactGroup group, string error) : base(error)
         {
@@ -22,27 +23,38 @@
 
             ModelResourceName = group.ResourceName;
             _modelEtag = group.ETag;
-            Name = group.FormattedName ?? string.Empty;
-
-            var memberCount = group.MemberCount ?? 0;
-            Name += " (" + memberCount + ")";
+            FormattedName = group.FormattedName ?? string.Empty;
+            _memberCount = group.MemberCount ?? 0;
+            Name = FormattedName + " (" + _memberCount + ")";
         }
 
         public GroupModel(string name, string error) : base(error)
         {
-            Name = name;
+            FormattedName = name;
         }
 
         public void ApplyFrom(string name)
         {
-            Name = name;
+            FormattedName = name;
+        }
+
+        public void ApplyFrom([NotNull] GroupModel group)
+        {
+            if (group == null)
+                throw new ArgumentNullException(nameof(group));
+
+            ModelResourceName = group.ModelResourceName;
+            _modelEtag = group._modelEtag;
+            FormattedName = group.FormattedName;
+            _memberCount = group._memberCount;
+            Name = FormattedName + " (" + _memberCount + ")";
         }
 
         public ContactGroup Map()
         {
             return new ContactGroup
             {
-                Name = Name,
+                Name = FormattedName,
                 ETag = _modelEtag ?? string.Empty
             };
         }

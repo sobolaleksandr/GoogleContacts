@@ -5,10 +5,9 @@
 
     public interface IGroupService
     {
-        Task<ContactModel> CreateGroup(GroupModel model);
-        Task<string> DeleteGroup(GroupModel model);
-        Task<List<ContactModel>> GetGroups();
-        Task<ContactModel> UpdateGroup(GroupModel model);
-        void Stop();
+        Task<ContactModel> Create(GroupModel model);
+        Task<string> Delete(GroupModel model);
+        Task<List<ContactModel>> Get();
+        Task<ContactModel> Update(GroupModel model);
     }
 }

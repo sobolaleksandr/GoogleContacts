@@ -15,7 +15,7 @@
         {
             Email = person.Email;
             PhoneNumber = person.PhoneNumber;
-            GivenName = person.Name;
+            GivenName = person.GivenName;
             FamilyName = person.FamilyName;
         }
 

@@ -1,9 +1,9 @@
 ﻿namespace GoogleContacts.App.Commands
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Windows;
     using System.Windows.Input;
 
     using GoogleContacts.App.ViewModels;
@@ -56,7 +56,8 @@
 
                     selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber);
                     var peopleService = NinjectKernel.Get<IPeopleService>();
-                    await peopleService.UpdateContact(selectedPerson);
+                    var updatedContact = await peopleService.Update(selectedPerson);
+                    selectedPerson.ApplyFrom((PersonModel)updatedContact);
 
                     break;
                 }
@@ -73,7 +74,12 @@
 
                     selectedGroup.ApplyFrom(vm.Name);
                     var groupService = NinjectKernel.Get<IGroupService>();
-                    await groupService.UpdateGroup(selectedGroup);
+                    var result = await groupService.Update(selectedGroup);
+                    var error = result.Error;
+                    if (string.IsNullOrEmpty(error))
+                        selectedGroup.ApplyFrom((GroupModel)result);
+                    else
+                        MessageBox.Show(error);
 
                     break;
                 }

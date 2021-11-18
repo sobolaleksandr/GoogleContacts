@@ -11,12 +11,12 @@ namespace GoogleContacts.App
 
     class PeopleServiceMock: IPeopleService
     {
-        public async Task<PersonModel> CreateContact(PersonModel personModel)
+        public async Task<ContactModel> Create(PersonModel model)
         {
-            return personModel;
+            return model;
         }
 
-        public async Task<List<ContactModel>> GetContacts()
+        public async Task<List<ContactModel>> Get()
         {
             return Enumerable.Range(0, 10)
                 .Select(item =>
@@ -30,14 +30,14 @@ namespace GoogleContacts.App
             return new List<PersonModel>();
         }
 
-        public async Task<bool> TryToDeleteContact(PersonModel personModel)
+        public async Task<string> Delete(PersonModel model)
         {
-            return true;
+            return string.Empty;
         }
 
-        public async Task<PersonModel> UpdateContact(PersonModel personModel)
+        public async Task<ContactModel> Update(PersonModel model)
         {
-            return personModel;
+            return model;
         }
     }
 }

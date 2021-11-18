@@ -37,18 +37,23 @@
                 case PersonModel selectedPerson:
                 {
                     var peopleService = NinjectKernel.Get<IPeopleService>();
-                    await peopleService.TryToDeleteContact(selectedPerson);
-                    People.Remove(selectedPerson);
+                    var result = await peopleService.Delete(selectedPerson);
+                    if (string.IsNullOrEmpty(result))
+                        People.Remove(selectedPerson);
+                    else
+                        MessageBox.Show(result);
+
                     break;
                 }
                 case GroupModel selectedGroup:
                 {
                     var groupService = NinjectKernel.Get<IGroupService>();
-                    var result = await groupService.DeleteGroup(selectedGroup);
+                    var result = await groupService.Delete(selectedGroup);
                     if (string.IsNullOrEmpty(result))
                         Groups.Remove(selectedGroup);
                     else
                         MessageBox.Show(result);
+
                     break;
                 }
             }
