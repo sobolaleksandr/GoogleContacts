@@ -16,13 +16,13 @@
             var resources = new List<string> { "people/c8717037971012891222" };
 
             //GoogleService.Initialize();
-            //var groups = await GoogleService.Get();
+            //var groups = await GoogleService.GetAll();
             //GroupModel group = await GoogleContacts.Create(groupModel);
             //var modGroup = await GoogleContacts.ModifyGroup("contactGroups/2f4d42e08a6f5e7f",resources);
             //groupModel.modelResourceName = "contactGroups/2f4d42e08a6f5e7f";
             //var updated = await GoogleContacts.Update(groups.FirstOrDefault());
             //GoogleContacts.Create(personModel);
-            //var model = (await GoogleService.Get(personFields)).FirstOrDefault();
+            //var model = (await GoogleService.GetAll(personFields)).FirstOrDefault();
             //model.modelEmail = "JohnD@yahoo.com";
             //var model = (await GoogleContacts.SearchContact(query, properties)).FirstOrDefault();
             //await GoogleContacts.Update(model, personFields);

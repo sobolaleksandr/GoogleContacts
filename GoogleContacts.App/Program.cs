@@ -33,7 +33,7 @@
             while (true)
             {
                 var people = Task.Run(async () => await peopleService.Get()).GetAwaiter().GetResult();
-                var groups = Task.Run(async () => await groupService.Get()).GetAwaiter().GetResult();
+                var groups = Task.Run(async () => await groupService.GetAll()).GetAwaiter().GetResult();
 
                 var window = new MainWindow
                 {

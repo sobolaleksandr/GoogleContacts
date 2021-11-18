@@ -1,62 +1,39 @@
 ﻿namespace GoogleContacts.App.Commands
 {
-    using System;
+    using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Input;
 
     using GoogleContacts.Domain;
 
-    public class DeleteCommand : ICommand
+    public class DeleteCommand : EditCommandBase
     {
-        public DeleteCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
+        public DeleteCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups) :
+            base(people, groups)
         {
-            People = people;
-            Groups = groups;
         }
 
-        public ObservableCollection<ContactModel> Groups { get; set; }
-
-        public ObservableCollection<ContactModel> People { get; set; }
-
-        public bool CanExecute(object parameter)
+        protected override async Task EditGroup(GroupModel selectedGroup)
         {
-            return true; // Оставил такую реализацию
+            var groupService = NinjectKernel.Get<IGroupService>();
+            var result = await groupService.Delete(selectedGroup);
+            DeleteContact(selectedGroup, result, Groups);
         }
 
-        public event EventHandler CanExecuteChanged;
-
-        public async void Execute(object parameter)
+        protected override async Task EditPerson(PersonModel selectedPerson)
         {
-            var selectedContact = People.FirstOrDefault(person => person.IsSelected) ??
-                                  Groups.FirstOrDefault(group => group.IsSelected);
+            var peopleService = NinjectKernel.Get<IPeopleService>();
+            var result = await peopleService.Delete(selectedPerson);
+            DeleteContact(selectedPerson, result, People);
+        }
 
-            switch (selectedContact)
-            {
-                case PersonModel selectedPerson:
-                {
-                    var peopleService = NinjectKernel.Get<IPeopleService>();
-                    var result = await peopleService.Delete(selectedPerson);
-                    if (string.IsNullOrEmpty(result))
-                        People.Remove(selectedPerson);
-                    else
-                        MessageBox.Show(result);
-
-                    break;
-                }
-                case GroupModel selectedGroup:
-                {
-                    var groupService = NinjectKernel.Get<IGroupService>();
-                    var result = await groupService.Delete(selectedGroup);
-                    if (string.IsNullOrEmpty(result))
-                        Groups.Remove(selectedGroup);
-                    else
-                        MessageBox.Show(result);
-
-                    break;
-                }
-            }
+        private static void DeleteContact(ContactModel model, string result, ICollection<ContactModel> contacts)
+        {
+            if (string.IsNullOrEmpty(result))
+                contacts.Remove(model);
+            else
+                MessageBox.Show(result);
         }
     }
 }

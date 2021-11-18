@@ -1,10 +1,9 @@
 ﻿namespace GoogleContacts.App.Commands
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
-    using System.Windows.Input;
 
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
@@ -13,77 +12,59 @@
     /// <summary>
     /// Команда изменения модели примитива.
     /// </summary>
-    public class EditCommand : ICommand
+    public class EditCommand : EditCommandBase
     {
-        public EditCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
+        public EditCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups) : base(
+            people, groups)
         {
-            People = people;
-            Groups = groups;
         }
 
-        public ObservableCollection<ContactModel> Groups { get; set; }
-
-        public ObservableCollection<ContactModel> People { get; set; }
-
-        public bool CanExecute(object parameter)
+        protected override async Task EditGroup(GroupModel selectedGroup)
         {
-            return true; // Оставил такую реализацию
-        }
-
-        public event EventHandler CanExecuteChanged; // Не использовал
-
-        /// <summary>
-        /// Изменение модели примитива.
-        /// </summary>
-        /// <param name="parameter"> Вызывающий примитив. </param>
-        public async void Execute(object parameter)
-        {
-            var selectedContact = People.FirstOrDefault(person => person.IsSelected) ??
-                                  Groups.FirstOrDefault(group => group.IsSelected);
-
-            switch (selectedContact)
+            var vm = new GroupViewModel(selectedGroup);
+            var window = new EditGroupView
             {
-                case PersonModel selectedPerson:
-                {
-                    var vm = new PersonViewModel(selectedPerson);
-                    var window = new EditPersonView
-                    {
-                        DataContext = vm
-                    };
+                DataContext = vm
+            };
 
-                    if (window.ShowDialog() != true)
-                        return;
+            if (window.ShowDialog() != true)
+                return;
 
-                    selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber);
-                    var peopleService = NinjectKernel.Get<IPeopleService>();
-                    var updatedContact = await peopleService.Update(selectedPerson);
-                    selectedPerson.ApplyFrom((PersonModel)updatedContact);
+            selectedGroup.ApplyFrom(vm.Name);
+            var groupService = NinjectKernel.Get<IGroupService>();
+            var result = await groupService.Update(selectedGroup);
+            UpdateContact(selectedGroup, result);
+        }
 
-                    break;
-                }
-                case GroupModel selectedGroup:
-                {
-                    var vm = new GroupViewModel(selectedGroup);
-                    var window = new EditGroupView
-                    {
-                        DataContext = vm
-                    };
+        protected override async Task EditPerson(PersonModel selectedPerson)
+        {
+            var vm = new PersonViewModel(selectedPerson, Groups);
+            var window = new EditPersonView
+            {
+                DataContext = vm
+            };
 
-                    if (window.ShowDialog() != true)
-                        return;
+            if (window.ShowDialog() != true)
+                return;
 
-                    selectedGroup.ApplyFrom(vm.Name);
-                    var groupService = NinjectKernel.Get<IGroupService>();
-                    var result = await groupService.Update(selectedGroup);
-                    var error = result.Error;
-                    if (string.IsNullOrEmpty(error))
-                        selectedGroup.ApplyFrom((GroupModel)result);
-                    else
-                        MessageBox.Show(error);
+            var group = Groups.FirstOrDefault(item => item.IsSelected);
+            selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber, group);
+            var peopleService = NinjectKernel.Get<IPeopleService>();
+            var result = await peopleService.Update(selectedPerson);
+            UpdateContact(selectedPerson, result);
 
-                    break;
-                }
-            }
+            var groupService = NinjectKernel.Get<IGroupService>();
+            var updatedGroup = await groupService.Get(group.ModelResourceName);
+            group.ApplyFrom(updatedGroup);
+        }
+
+        private static void UpdateContact(ContactModel model, ContactModel result)
+        {
+            var error = result.Error;
+            if (string.IsNullOrEmpty(error))
+                model.ApplyFrom(result);
+            else
+                MessageBox.Show(error);
         }
     }
 }

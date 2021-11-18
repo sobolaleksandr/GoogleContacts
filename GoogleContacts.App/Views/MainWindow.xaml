@@ -34,22 +34,9 @@
 
         <TreeView Grid.Row="0" Grid.Column="0" DockPanel.Dock="Left"
                   ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}"
-                  ItemsSource="{Binding Contacts}">
-            <TreeView.Template>
-                <ControlTemplate>
-                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
-                        <ItemsPresenter />
-                    </ScrollViewer>
-                </ControlTemplate>
-            </TreeView.Template>
-
-            <TreeView.ItemTemplate>
-                <HierarchicalDataTemplate ItemsSource="{Binding Contacts}">
-                    <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding Name}" />
-                    </StackPanel>
-                </HierarchicalDataTemplate>
-            </TreeView.ItemTemplate>
+                  ItemsSource="{Binding Contacts}"
+                  ItemTemplate="{StaticResource TreeViewItemTemplate}" 
+                  Template="{StaticResource TreeViewTemplate}">
         </TreeView>
 
         <StackPanel Grid.Column="1" Grid.Row="0">

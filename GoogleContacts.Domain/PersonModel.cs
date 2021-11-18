@@ -6,10 +6,11 @@
 
     using Google.Apis.PeopleService.v1.Data;
 
+    using GoogleContacts.Domain.Annotations;
+
     public class PersonModel : ContactModel
     {
         private string _modelOrganization;
-        private ContactGroupMembership modelMembership;
 
         public PersonModel(Person person, string error) : base(error)
         {
@@ -30,7 +31,7 @@
             PhoneNumber = phoneNumber?.Value ?? string.Empty;
             Email = email?.Value ?? string.Empty;
             _modelOrganization = organization?.Name ?? string.Empty;
-            modelMembership = membership?.ContactGroupMembership;
+            ModelMembership = membership?.ContactGroupMembership;
             Name = GivenName + " (" + PhoneNumber + ")";
         }
 
@@ -43,19 +44,39 @@
             Name = GivenName + " (" + PhoneNumber + ")";
         }
 
-        public string Email { get; set; }
-        public string FamilyName { get; set; }
-        public string GivenName { get; set; }
-        public string ModelEtag { get; set; }
-        public string ModelResourceName { get; set; }
-        public string PhoneNumber { get; set; }
+        public string Email { get; private set; }
+        public string FamilyName { get; private set; }
+        public string GivenName { get; private set; }
+        public ContactGroupMembership ModelMembership { get; set; }
+        public string PhoneNumber { get; private set; }
 
-        public void ApplyFrom(string name, string familyName, string email, string phoneNumber)
+        public void ApplyFrom(string name, string familyName, string email, string phoneNumber, [NotNull] ContactModel group)
         {
+            if (group == null)
+                throw new ArgumentNullException(nameof(group));
+
             GivenName = name;
             FamilyName = familyName;
             PhoneNumber = phoneNumber;
             Email = email;
+            Name = GivenName + " (" + PhoneNumber + ")";
+            ModelMembership = new ContactGroupMembership { ContactGroupResourceName = group.ModelResourceName };
+        }
+
+        public override void ApplyFrom(ContactModel model)
+        {
+            if (!(model is PersonModel person))
+                return;
+
+            ModelResourceName = person.ModelResourceName;
+            ModelEtag = person.ModelEtag;
+
+            GivenName = person.GivenName;
+            FamilyName = person.FamilyName;
+            PhoneNumber = person.PhoneNumber;
+            Email = person.Email;
+            _modelOrganization = person._modelOrganization;
+            ModelMembership = person.ModelMembership;
             Name = GivenName + " (" + PhoneNumber + ")";
         }
 
@@ -69,25 +90,8 @@
                 PhoneNumbers = new List<PhoneNumber> { new PhoneNumber { Value = PhoneNumber } },
                 EmailAddresses = new List<EmailAddress> { new EmailAddress { Value = Email } },
                 Organizations = new List<Organization> { new Organization { Name = _modelOrganization } },
-                Memberships = new List<Membership> { new Membership { ContactGroupMembership = modelMembership } }
+                Memberships = new List<Membership> { new Membership { ContactGroupMembership = ModelMembership } }
             };
-        }
-
-        public void ApplyFrom(PersonModel person)
-        {
-            if (person == null)
-                throw new ArgumentNullException(nameof(person));
-
-            ModelResourceName = person.ModelResourceName;
-            ModelEtag = person.ModelEtag;
-
-            GivenName = person.GivenName;
-            FamilyName = person.FamilyName;
-            PhoneNumber = person.PhoneNumber;
-            Email = person.Email;
-            _modelOrganization = person._modelOrganization;
-            modelMembership = person.modelMembership;
-            Name = GivenName + " (" + PhoneNumber + ")";
         }
     }
 }

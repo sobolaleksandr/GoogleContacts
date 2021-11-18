@@ -82,15 +82,18 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
+            <Label Grid.Row="4" Grid.Column="0" Content="{Binding GroupTitle}" 
+                   Style="{StaticResource LabelStyle}" />
+            <TreeView Grid.Row="4" Grid.Column="1"
+                      ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}"
+                      ItemsSource="{Binding Groups}"
+                      ItemTemplate="{StaticResource TreeViewItemTemplate}" 
+                      Template="{StaticResource TreeViewTemplate}">
+            </TreeView>
         </Grid>
-
-        <Button Grid.Row="2" Content="Восстановить"
-                HorizontalAlignment="Left"
-                views:DialogResultButton.DialogResult="True"
-                Command="{Binding RestoreCommand}" CommandParameter="{Binding}" />
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Принять"
-                    views:DialogResultButton.DialogResult="True" Command="{Binding ApplyCommand}"
+                    views:DialogResultButton.DialogResult="True"
                     CommandParameter="{Binding}" />
             <Button Content="Закрыть"
                     views:DialogResultButton.DialogResult="False" />

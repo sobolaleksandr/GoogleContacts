@@ -1,6 +1,8 @@
 ﻿namespace GoogleContacts.App.ViewModels
 {
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Linq;
 
     using GoogleContacts.Domain;
 
@@ -11,17 +13,24 @@
         private string _givenName;
         private string _phoneNumber;
 
-        public PersonViewModel(PersonModel person)
+        public PersonViewModel(PersonModel person, ObservableCollection<ContactModel> groups) : this(groups)
         {
             Email = person.Email;
             PhoneNumber = person.PhoneNumber;
             GivenName = person.GivenName;
             FamilyName = person.FamilyName;
+            var selectedGroup = groups.FirstOrDefault(group =>
+                group.ModelResourceName == person.ModelMembership.ContactGroupResourceName);
+
+            if (selectedGroup != null)
+                selectedGroup.IsSelected = true;
+            else
+                groups.FirstOrDefault().IsSelected = true;
         }
 
-        public PersonViewModel()
+        public PersonViewModel(ObservableCollection<ContactModel> groups)
         {
-
+            Groups = groups;
         }
 
         public string Email
@@ -59,6 +68,10 @@
         }
 
         public static string GivenNameTitle => "Имя";
+
+        public ObservableCollection<ContactModel> Groups { get; set; }
+
+        public static string GroupTitle => "Группы";
 
         public string PhoneNumber
         {

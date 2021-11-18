@@ -63,7 +63,27 @@
             }
         }
 
-        public async Task<List<ContactModel>> Get()
+        public async Task<ContactModel> Get(string resourceName)
+        {
+            if (string.IsNullOrEmpty(resourceName))
+                return new ContactModel("Empty resourceName");
+
+            var request = _groupsResource.Get(resourceName);
+
+            try
+            {
+                var response = await request.ExecuteAsync();
+                return response != null
+                    ? new GroupModel(response, string.Empty)
+                    : new ContactModel("There is no such group on server");
+            }
+            catch (Exception exception)
+            {
+                return new ContactModel(exception.ToString());
+            }
+        }
+
+        public async Task<List<ContactModel>> GetAll()
         {
             var request = _groupsResource.List();
 
@@ -90,10 +110,14 @@
                 ContactGroup = model.Map()
             };
 
+            var updateRequest = _groupsResource.Update(request, model.ModelResourceName);
+
             try
             {
-                var response = await _groupsResource.Update(request, model.ModelResourceName).ExecuteAsync();
-                return new GroupModel(response, string.Empty);
+                var response = await updateRequest.ExecuteAsync();
+                return response != null
+                    ? new GroupModel(response, string.Empty)
+                    : new ContactModel("Unexpected error");
             }
             catch (Exception exception)
             {

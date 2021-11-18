@@ -26,7 +26,7 @@ namespace GoogleContacts.Domain.Tests
         //[Fact, TestPriority(3)]
         //public async Task GetGroups_Initialized_ReturnsGroups()
         //{
-        //    List<GroupModel> groups = await GoogleService.Get();
+        //    List<GroupModel> groups = await GoogleService.GetAll();
 
         //    Assert.Equal(11, groups.Count);
         //}
@@ -34,7 +34,7 @@ namespace GoogleContacts.Domain.Tests
         //[Fact]
         //public async Task GetGroups_NotInitialized_ReturnsNull()
         //{
-        //    List<GroupModel> groups = await GoogleService.Get();
+        //    List<GroupModel> groups = await GoogleService.GetAll();
 
         //    Assert.Null(groups);
         //}
@@ -69,13 +69,13 @@ namespace GoogleContacts.Domain.Tests
             var personFields = "names,emailAddresses,phoneNumbers,organizations,memberships";
             var resources = new List<string> { "people/c8717037971012891222" };
             //GoogleService.Initialize();
-            //var groups = await GoogleService.Get();
+            //var groups = await GoogleService.GetAll();
             //GroupModel group = await GoogleContacts.Create(groupModel);
             //var modGroup = await GoogleContacts.ModifyGroup("contactGroups/2f4d42e08a6f5e7f",resources);
             //groupModel.modelResourceName = "contactGroups/2f4d42e08a6f5e7f";
             //var updated = await GoogleContacts.Update(groups.FirstOrDefault());
             //GoogleContacts.Create(personModel);
-            //var model = (await GoogleService.Get(personFields)).FirstOrDefault();
+            //var model = (await GoogleService.GetAll(personFields)).FirstOrDefault();
             //model.modelEmail = "JohnD@yahoo.com";
             //var model = (await GoogleContacts.SearchContact(query, properties)).FirstOrDefault();
             //await GoogleContacts.Update(model, personFields);
@@ -95,7 +95,7 @@ namespace GoogleContacts.Domain.Tests
         //[TestPriority(2)]
         //public async Task DeleteGroup_WithGroup_ReturnsGroup()
         //{
-        //    var groupModel = (await GoogleService.Get()).FirstOrDefault();
+        //    var groupModel = (await GoogleService.GetAll()).FirstOrDefault();
 
         //    var result = await GoogleService.Delete(groupModel);
 
@@ -106,7 +106,7 @@ namespace GoogleContacts.Domain.Tests
         //[TestPriority(1)]
         //public async Task UpdateGroup_WithGroup_ReturnsGroup()
         //{
-        //    var groupModels = await GoogleService.Get();
+        //    var groupModels = await GoogleService.GetAll();
         //    var groupModel = groupModels.FirstOrDefault();
 
         //    Assert.NotNull(groupModel);

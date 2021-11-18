@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.ObjectModel;
+    using System.Windows;
 
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
@@ -15,7 +16,7 @@
 
         public override async void Execute(object parameter)
         {
-            var vm = new PersonViewModel();
+            var vm = new PersonViewModel(new ObservableCollection<ContactModel>());
             var window = new EditPersonView
             {
                 DataContext = vm
@@ -25,11 +26,11 @@
                 return;
 
             var peopleService = NinjectKernel.Get<IPeopleService>();
-            var createdContact =
-                await peopleService.Create(new PersonModel(vm.GivenName, vm.FamilyName, vm.Email,
-                    vm.PhoneNumber, string.Empty));
+            var personModel = new PersonModel(vm.GivenName, vm.FamilyName, vm.Email,
+                vm.PhoneNumber, string.Empty);
 
-            Contacts.Add(createdContact);
+            var result = await peopleService.Create(personModel);
+            UpdateContacts(result);
         }
     }
 }

@@ -7,7 +7,8 @@
     {
         Task<ContactModel> Create(GroupModel model);
         Task<string> Delete(GroupModel model);
-        Task<List<ContactModel>> Get();
+        Task<List<ContactModel>> GetAll();
         Task<ContactModel> Update(GroupModel model);
+        Task<ContactModel> Get(string resourceName);
     }
 }

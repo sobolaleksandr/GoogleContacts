@@ -18,7 +18,7 @@
             return string.Empty;
         }
 
-        public async Task<List<ContactModel>> Get()
+        public async Task<List<ContactModel>> GetAll()
         {
             return Enumerable.Range(100, 10)
                 .Select(item => (ContactModel)new GroupModel($"TetsGroup{item}", string.Empty)).ToList();
@@ -27,6 +27,11 @@
         public async Task<ContactModel> Update(GroupModel model)
         {
             return model;
+        }
+
+        public async Task<ContactModel> Get(string resourceName)
+        {
+            return new ContactModel(string.Empty);
         }
     }
 }
