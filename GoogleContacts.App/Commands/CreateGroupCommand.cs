@@ -6,9 +6,10 @@
     using GoogleContacts.App.Views;
     using GoogleContacts.Domain;
 
-    public class CreateGroupCommand : CreateCommand
+    public class CreateGroupCommand : BaseCommand
     {
-        public CreateGroupCommand(ObservableCollection<ContactModel> contacts) : base(contacts)
+        public CreateGroupCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
+            : base(people, groups)
         {
         }
 
@@ -26,7 +27,8 @@
             var groupService = NinjectKernel.Get<IGroupService>();
             var groupModel = new GroupModel(vm.Name, string.Empty);
             var result = await groupService.Create(groupModel);
-            UpdateContacts(result);
+            if (ValidateResult(result))
+                await UpdateGroups();
         }
     }
 }

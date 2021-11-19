@@ -26,8 +26,8 @@
 
             DeleteCommand = new DeleteCommand(people, groups);
             EditCommand = new EditCommand(people, groups);
-            CreatePersonCommand = new CreatePersonCommand(people);
-            CreateGroupCommand = new CreateGroupCommand(groups);
+            CreatePersonCommand = new CreatePersonCommand(people, groups);
+            CreateGroupCommand = new CreateGroupCommand(people, groups);
         }
 
         public ObservableCollection<ContactModel> Contacts { get; }

@@ -1,37 +1,23 @@
 ﻿namespace GoogleContacts.App.Commands
 {
-    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows.Input;
 
     using GoogleContacts.Domain;
 
-    public abstract class EditCommandBase : ICommand
+    public abstract class EditCommandBase : BaseCommand
     {
-        protected readonly ObservableCollection<ContactModel> Groups;
-
-        protected readonly ObservableCollection<ContactModel> People;
-
         protected EditCommandBase(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
+            : base(people, groups)
         {
-            People = people;
-            Groups = groups;
         }
-
-        public bool CanExecute(object parameter)
-        {
-            return true; // Оставил такую реализацию
-        }
-
-        public event EventHandler CanExecuteChanged; // Не использовал
 
         /// <summary>
         /// Изменение модели примитива.
         /// </summary>
         /// <param name="parameter"> Вызывающий примитив. </param>
-        public async void Execute(object parameter)
+        public override async void Execute(object parameter)
         {
             var selectedContact = People.FirstOrDefault(person => person.IsSelected) ??
                                   Groups.FirstOrDefault(group => group.IsSelected);

@@ -10,6 +10,11 @@
     /// </summary>
     public abstract class ViewModelBase : INotifyPropertyChanged
     {
+        protected ViewModelBase()
+        {
+            ApplyCommand = new ApplyCommand();
+        }
+
         /// <summary>
         /// Поле свойства <see cref="IsChanged"/>.
         /// </summary>
@@ -40,7 +45,13 @@
         protected void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            ApplyCommand.RaiseCanExecuteChanged();
         }
+
+        /// <summary>
+        /// Команда принятия изменений примитива.
+        /// </summary>
+        public ApplyCommand ApplyCommand { get; set; }
 
         /// <summary>
         /// Валидация значений с плавающей точкой.

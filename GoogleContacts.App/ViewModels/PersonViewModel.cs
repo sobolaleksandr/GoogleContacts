@@ -19,13 +19,15 @@
             PhoneNumber = person.PhoneNumber;
             GivenName = person.GivenName;
             FamilyName = person.FamilyName;
-            var selectedGroup = groups.FirstOrDefault(group =>
-                group.ModelResourceName == person.ModelMembership.ContactGroupResourceName);
+            var groupResourceName = person.ModelMembership?.ContactGroupResourceName;
+            if (groupResourceName == null)
+                return;
 
-            if (selectedGroup != null)
-                selectedGroup.IsSelected = true;
-            else
-                groups.FirstOrDefault().IsSelected = true;
+            var selectedGroup = groups.FirstOrDefault(group => group.ModelResourceName == groupResourceName);
+            if (selectedGroup == null)
+                return;
+
+            selectedGroup.IsSelected = true;
         }
 
         public PersonViewModel(ObservableCollection<ContactModel> groups)

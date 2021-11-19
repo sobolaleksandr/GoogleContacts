@@ -1,9 +1,7 @@
 ﻿namespace GoogleContacts.App.Commands
 {
-    using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
-    using System.Windows;
 
     using GoogleContacts.Domain;
 
@@ -18,22 +16,20 @@
         {
             var groupService = NinjectKernel.Get<IGroupService>();
             var result = await groupService.Delete(selectedGroup);
-            DeleteContact(selectedGroup, result, Groups);
+            if (ValidateError(result))
+                Groups.Remove(selectedGroup);
         }
 
         protected override async Task EditPerson(PersonModel selectedPerson)
         {
             var peopleService = NinjectKernel.Get<IPeopleService>();
             var result = await peopleService.Delete(selectedPerson);
-            DeleteContact(selectedPerson, result, People);
-        }
 
-        private static void DeleteContact(ContactModel model, string result, ICollection<ContactModel> contacts)
-        {
-            if (string.IsNullOrEmpty(result))
-                contacts.Remove(model);
-            else
-                MessageBox.Show(result);
+            if (!ValidateError(result))
+                return;
+
+            People.Remove(selectedPerson);
+            await UpdateGroups();
         }
     }
 }

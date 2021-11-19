@@ -22,7 +22,7 @@
         {
             return Enumerable.Range(0, 10)
                 .Select(item =>
-                    (ContactModel)new PersonModel($"Test{item}", $"Test{item}", $"Test{item}", $"Test{item}",
+                    (ContactModel)new PersonModel($"Test{item}", $"Test{item}", $"Test{item}", $"Test{item}", new ContactModel(string.Empty), 
                         string.Empty))
                 .ToList();
         }

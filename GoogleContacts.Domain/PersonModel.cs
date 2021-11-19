@@ -6,8 +6,6 @@
 
     using Google.Apis.PeopleService.v1.Data;
 
-    using GoogleContacts.Domain.Annotations;
-
     public class PersonModel : ContactModel
     {
         private string _modelOrganization;
@@ -35,31 +33,37 @@
             Name = GivenName + " (" + PhoneNumber + ")";
         }
 
-        public PersonModel(string name, string familyName, string email, string information, string error) : base(error)
+        public PersonModel(string name, string familyName, string email, string information, ContactModel group,
+            string error) : base(error)
         {
             GivenName = name;
             FamilyName = familyName;
             PhoneNumber = information;
             Email = email;
             Name = GivenName + " (" + PhoneNumber + ")";
+            if (group == null)
+                return;
+
+            ModelMembership = new ContactGroupMembership { ContactGroupResourceName = group.ModelResourceName };
         }
 
         public string Email { get; private set; }
         public string FamilyName { get; private set; }
         public string GivenName { get; private set; }
-        public ContactGroupMembership ModelMembership { get; set; }
+        public ContactGroupMembership ModelMembership { get; private set; }
         public string PhoneNumber { get; private set; }
 
-        public void ApplyFrom(string name, string familyName, string email, string phoneNumber, [NotNull] ContactModel group)
+        public void ApplyFrom(string name, string familyName, string email, string phoneNumber,
+            ContactModel group)
         {
-            if (group == null)
-                throw new ArgumentNullException(nameof(group));
-
             GivenName = name;
             FamilyName = familyName;
             PhoneNumber = phoneNumber;
             Email = email;
             Name = GivenName + " (" + PhoneNumber + ")";
+            if (group == null)
+                return;
+
             ModelMembership = new ContactGroupMembership { ContactGroupResourceName = group.ModelResourceName };
         }
 

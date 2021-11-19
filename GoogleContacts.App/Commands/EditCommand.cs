@@ -3,7 +3,6 @@
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Windows;
 
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
@@ -33,7 +32,8 @@
             selectedGroup.ApplyFrom(vm.Name);
             var groupService = NinjectKernel.Get<IGroupService>();
             var result = await groupService.Update(selectedGroup);
-            UpdateContact(selectedGroup, result);
+            if (ValidateResult(result))
+                await UpdateGroups();
         }
 
         protected override async Task EditPerson(PersonModel selectedPerson)
@@ -51,20 +51,11 @@
             selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber, group);
             var peopleService = NinjectKernel.Get<IPeopleService>();
             var result = await peopleService.Update(selectedPerson);
-            UpdateContact(selectedPerson, result);
+            if (!ValidateResult(result))
+                return;
 
-            var groupService = NinjectKernel.Get<IGroupService>();
-            var updatedGroup = await groupService.Get(group.ModelResourceName);
-            group.ApplyFrom(updatedGroup);
-        }
-
-        private static void UpdateContact(ContactModel model, ContactModel result)
-        {
-            var error = result.Error;
-            if (string.IsNullOrEmpty(error))
-                model.ApplyFrom(result);
-            else
-                MessageBox.Show(error);
+            selectedPerson.ApplyFrom(result);
+            await UpdateGroups();
         }
     }
 }
