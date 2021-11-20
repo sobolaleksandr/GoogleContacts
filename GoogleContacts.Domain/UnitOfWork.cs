@@ -7,15 +7,15 @@
     using Google.Apis.PeopleService.v1;
     using Google.Apis.Services;
 
-    public abstract class BaseService : IDisposable
+    public class UnitOfWork : IDisposable
     {
         private const string M_CLIENT_ID = "217336154173-tdce9e8b3c9hjfsd9abnfb7q0ef4q9ab.apps.googleusercontent.com";
         private const string M_CLIENT_SECRET = "uavwQnDWY6bUEFf75pXtP0m6";
-        protected readonly PeopleServiceService Service;
+        private readonly PeopleServiceService _service;
 
         private bool _disposed;
 
-        protected BaseService()
+        public UnitOfWork(bool isDebug)
         {
             var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                 new ClientSecrets
@@ -27,12 +27,18 @@
                 "user",
                 CancellationToken.None).Result;
 
-            Service = new PeopleServiceService(new BaseClientService.Initializer
+            _service = new PeopleServiceService(new BaseClientService.Initializer
             {
                 HttpClientInitializer = credential,
                 ApplicationName = "GoogleContacts",
             });
+
+            CreateServices(isDebug);
         }
+
+        public IGroupService GroupService { get; private set; }
+
+        public IPeopleService PeopleService { get; private set; }
 
         public void Dispose()
         {
@@ -40,16 +46,29 @@
             GC.SuppressFinalize(this);
         }
 
-        protected virtual void Dispose(bool disposing)
+        private void CreateServices(in bool isDebug)
+        {
+            if (isDebug)
+            {
+                PeopleService = new PeopleServiceMock();
+                GroupService = new GroupServiceMock();
+                return;
+            }
+
+            PeopleService = new PeopleService(_service);
+            GroupService = new GroupService(_service);
+        }
+
+        private void Dispose(bool disposing)
         {
             if (_disposed)
                 return;
 
-            Service?.Dispose();
+            _service?.Dispose();
             _disposed = true;
         }
 
-        ~BaseService()
+        ~UnitOfWork()
         {
             Dispose(false);
         }

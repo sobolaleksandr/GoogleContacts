@@ -11,11 +11,15 @@
     public abstract class BaseCommand : ICommand
     {
         protected readonly ObservableCollection<ContactModel> Groups;
+        protected readonly IGroupService GroupService;
         protected readonly ObservableCollection<ContactModel> People;
+        protected readonly IPeopleService PeopleService;
 
         protected BaseCommand(ObservableCollection<ContactModel> people,
-            ObservableCollection<ContactModel> groups)
+            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork)
         {
+            GroupService = unitOfWork.GroupService;
+            PeopleService = unitOfWork.PeopleService;
             People = people;
             Groups = groups;
         }
@@ -31,20 +35,13 @@
 
         protected async Task UpdateGroups()
         {
-            var groupService = NinjectKernel.Get<IGroupService>();
-            var groups = await groupService.GetAll();
+            var groups = await GroupService.Get();
 
             Groups.Clear();
             foreach (var group in groups)
             {
                 Groups.Add(group);
             }
-        }
-
-        protected static bool ValidateResult(ContactModel result)
-        {
-            var error = result.Error;
-            return ValidateError(error);
         }
 
         protected static bool ValidateError(string error)
@@ -54,6 +51,12 @@
 
             MessageBox.Show(error);
             return false;
+        }
+
+        protected static bool ValidateResult(ContactModel result)
+        {
+            var error = result.Error;
+            return ValidateError(error);
         }
     }
 }

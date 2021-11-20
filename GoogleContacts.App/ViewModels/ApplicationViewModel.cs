@@ -1,15 +1,32 @@
 ﻿namespace GoogleContacts.App.ViewModels
 {
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
 
     using GoogleContacts.App.Commands;
     using GoogleContacts.Domain;
 
     public class ApplicationViewModel
     {
-        public ApplicationViewModel(ObservableCollection<ContactModel> people,
-            ObservableCollection<ContactModel> groups)
+        public ObservableCollection<ContactModel> Contacts { get; private set; }
+        public CreateGroupCommand CreateGroupCommand { get; private set; }
+        public CreatePersonCommand CreatePersonCommand { get; private set; }
+        public DeleteCommand DeleteCommand { get; private set; }
+        public EditCommand EditCommand { get; private set; }
+
+        /// <summary>
+        /// Заголовок окна.
+        /// </summary>
+        public static string WindowTitle => "GoogleContacts";
+
+        public async Task UploadData(UnitOfWork unitOfWork)
         {
+            var peopleService = unitOfWork.PeopleService;
+            var groupService = unitOfWork.GroupService;
+
+            var people = new ObservableCollection<ContactModel>(await peopleService.Get());
+            var groups = new ObservableCollection<ContactModel>(await groupService.Get());
+
             Contacts = new ObservableCollection<ContactModel>
             {
                 new ContactModel(string.Empty)
@@ -24,21 +41,10 @@
                 }
             };
 
-            DeleteCommand = new DeleteCommand(people, groups);
-            EditCommand = new EditCommand(people, groups);
-            CreatePersonCommand = new CreatePersonCommand(people, groups);
-            CreateGroupCommand = new CreateGroupCommand(people, groups);
+            DeleteCommand = new DeleteCommand(people, groups, unitOfWork);
+            EditCommand = new EditCommand(people, groups, unitOfWork);
+            CreatePersonCommand = new CreatePersonCommand(people, groups, unitOfWork);
+            CreateGroupCommand = new CreateGroupCommand(people, groups, unitOfWork);
         }
-
-        public ObservableCollection<ContactModel> Contacts { get; }
-        public CreateGroupCommand CreateGroupCommand { get; }
-        public CreatePersonCommand CreatePersonCommand { get; }
-        public DeleteCommand DeleteCommand { get; }
-        public EditCommand EditCommand { get; }
-
-        /// <summary>
-        /// Заголовок окна.
-        /// </summary>
-        public static string WindowTitle => "GoogleContacts";
     }
 }

@@ -7,16 +7,15 @@
 
     using Google.Apis.PeopleService.v1;
     using Google.Apis.PeopleService.v1.Data;
+    using Google.Apis.Services;
 
-    // ReSharper disable once ClassNeverInstantiated.Global
-    // Created in DI
-    public class GroupService : BaseService, IGroupService
+    public class GroupService : IGroupService
     {
         private readonly ContactGroupsResource _groupsResource;
 
-        public GroupService()
+        public GroupService(IClientService service)
         {
-            _groupsResource = new ContactGroupsResource(Service);
+            _groupsResource = new ContactGroupsResource(service);
         }
 
         public async Task<ContactModel> Create(GroupModel model)
@@ -63,23 +62,6 @@
             }
         }
 
-        public async Task<List<ContactModel>> GetAll()
-        {
-            var request = _groupsResource.List();
-
-            try
-            {
-                var response = await request.ExecuteAsync();
-                return response.ContactGroups
-                    .Select(group => (ContactModel)new GroupModel(group, string.Empty))
-                    .ToList();
-            }
-            catch (Exception)
-            {
-                return new List<ContactModel>();
-            }
-        }
-
         public async Task<ContactModel> Update(GroupModel model)
         {
             if (model == null)
@@ -102,6 +84,23 @@
             catch (Exception exception)
             {
                 return new ContactModel(exception.ToString());
+            }
+        }
+
+        public async Task<List<ContactModel>> Get()
+        {
+            var request = _groupsResource.List();
+
+            try
+            {
+                var response = await request.ExecuteAsync();
+                return response.ContactGroups
+                    .Select(group => (ContactModel)new GroupModel(group, string.Empty))
+                    .ToList();
+            }
+            catch (Exception)
+            {
+                return new List<ContactModel>();
             }
         }
     }

@@ -1,10 +1,8 @@
-﻿namespace GoogleContacts.App
+﻿namespace GoogleContacts.Domain
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-
-    using GoogleContacts.Domain;
 
     internal class GroupServiceMock : IGroupService
     {
@@ -18,7 +16,7 @@
             return await Task.FromResult(string.Empty);
         }
 
-        public async Task<List<ContactModel>> GetAll()
+        public async Task<List<ContactModel>> Get()
         {
             var models = Enumerable.Range(100, 10)
                 .Select(item => (ContactModel)new GroupModel($"TetsGroup{item}", string.Empty)).ToList();

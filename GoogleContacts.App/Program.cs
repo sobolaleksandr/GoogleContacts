@@ -1,9 +1,7 @@
 ﻿namespace GoogleContacts.App
 {
     using System;
-    using System.Collections.ObjectModel;
     using System.Threading.Tasks;
-    using System.Windows;
 
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
@@ -19,49 +17,19 @@
         [STAThread]
         private static void Main()
         {
-            NewMethod(DEBUG);
-
-            var peopleService = NinjectKernel.Get<IPeopleService>();
-            var groupService = NinjectKernel.Get<IGroupService>();
-
+            using var unitOfWork = new UnitOfWork(DEBUG);
             while (true)
             {
-                var people = Task.Run(async () => await peopleService.Get()).GetAwaiter().GetResult();
-                var groups = Task.Run(async () => await groupService.GetAll()).GetAwaiter().GetResult();
-
-                var viewModel = new ApplicationViewModel(new ObservableCollection<ContactModel>(people),
-                    new ObservableCollection<ContactModel>(groups));
+                var viewModel = new ApplicationViewModel();
+                Task.Run(async () => await viewModel.UploadData(unitOfWork)).GetAwaiter().GetResult();
 
                 var window = new MainWindow
                 {
                     DataContext = viewModel
                 };
 
-                if (window.ShowDialog() == true)
-                    continue;
-
-                if (groupService is IDisposable disposableGroup && peopleService is IDisposable disposablePeople)
-                {
-                    disposablePeople.Dispose();
-                    disposableGroup.Dispose();
+                if (window.ShowDialog() != true)
                     return;
-                }
-
-                MessageBox.Show(groupService.GetType() + peopleService.GetType().ToString());
-            }
-        }
-
-        private static void NewMethod(bool value)
-        {
-            if (value)
-            {
-                NinjectKernel.RebindSingleton<IPeopleService, PeopleServiceMock>();
-                NinjectKernel.RebindSingleton<IGroupService, GroupServiceMock>();
-            }
-            else
-            {
-                NinjectKernel.RebindSingleton<IPeopleService, PeopleService>();
-                NinjectKernel.RebindSingleton<IGroupService, GroupService>();
             }
         }
     }

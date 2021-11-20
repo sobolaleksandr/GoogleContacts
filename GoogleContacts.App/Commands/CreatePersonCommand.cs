@@ -9,8 +9,8 @@
 
     public class CreatePersonCommand : BaseCommand
     {
-        public CreatePersonCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
-            : base(people, groups)
+        public CreatePersonCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
+            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
         {
         }
 
@@ -29,8 +29,7 @@
             var personModel = new PersonModel(vm.GivenName, vm.FamilyName, vm.Email,
                 vm.PhoneNumber, group, string.Empty);
 
-            var peopleService = NinjectKernel.Get<IPeopleService>();
-            var result = await peopleService.Create(personModel);
+            var result = await PeopleService.Create(personModel);
             if (!ValidateResult(result))
                 return;
 

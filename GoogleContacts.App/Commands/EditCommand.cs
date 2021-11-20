@@ -13,8 +13,8 @@
     /// </summary>
     public class EditCommand : EditCommandBase
     {
-        public EditCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups) : base(
-            people, groups)
+        public EditCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
+            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
         {
         }
 
@@ -30,8 +30,7 @@
                 return;
 
             selectedGroup.ApplyFrom(vm.Name);
-            var groupService = NinjectKernel.Get<IGroupService>();
-            var result = await groupService.Update(selectedGroup);
+            var result = await GroupService.Update(selectedGroup);
             if (ValidateResult(result))
                 await UpdateGroups();
         }
@@ -49,8 +48,7 @@
 
             var group = Groups.FirstOrDefault(item => item.IsSelected);
             selectedPerson.ApplyFrom(vm.GivenName, vm.FamilyName, vm.Email, vm.PhoneNumber, group);
-            var peopleService = NinjectKernel.Get<IPeopleService>();
-            var result = await peopleService.Update(selectedPerson);
+            var result = await PeopleService.Update(selectedPerson);
             if (!ValidateResult(result))
                 return;
 

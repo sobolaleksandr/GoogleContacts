@@ -8,8 +8,8 @@
 
     public class CreateGroupCommand : BaseCommand
     {
-        public CreateGroupCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
-            : base(people, groups)
+        public CreateGroupCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
+            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
         {
         }
 
@@ -24,9 +24,8 @@
             if (window.ShowDialog() != true)
                 return;
 
-            var groupService = NinjectKernel.Get<IGroupService>();
             var groupModel = new GroupModel(vm.Name, string.Empty);
-            var result = await groupService.Create(groupModel);
+            var result = await GroupService.Create(groupModel);
             if (ValidateResult(result))
                 await UpdateGroups();
         }

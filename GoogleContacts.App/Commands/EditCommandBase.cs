@@ -8,8 +8,8 @@
 
     public abstract class EditCommandBase : BaseCommand
     {
-        protected EditCommandBase(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups)
-            : base(people, groups)
+        protected EditCommandBase(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
+            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
         {
         }
 

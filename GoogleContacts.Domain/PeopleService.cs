@@ -5,11 +5,18 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    // ReSharper disable once ClassNeverInstantiated.Global
-    // Created in DI
-    public class PeopleService : BaseService, IPeopleService
+    using Google.Apis.PeopleService.v1;
+
+    public class PeopleService : IPeopleService
     {
         private const string PERSON_FIELDS = "names,emailAddresses,phoneNumbers,organizations,memberships";
+
+        private readonly PeopleServiceService _service;
+
+        public PeopleService(PeopleServiceService service)
+        {
+            _service = service;
+        }
 
         //TODO: cancelation token
         public async Task<ContactModel> Create(PersonModel model)
@@ -18,7 +25,7 @@
                 return new ContactModel("Empty model");
 
             var person = model.Map();
-            var request = Service.People.CreateContact(person);
+            var request = _service.People.CreateContact(person);
 
             try
             {
@@ -38,7 +45,7 @@
             if (model == null)
                 return "Empty model";
 
-            var request = Service.People.DeleteContact(model.ModelResourceName);
+            var request = _service.People.DeleteContact(model.ModelResourceName);
 
             try
             {
@@ -53,7 +60,7 @@
 
         public async Task<List<ContactModel>> Get()
         {
-            var request = Service.People.Connections.List("people/me");
+            var request = _service.People.Connections.List("people/me");
             request.PersonFields = PERSON_FIELDS;
 
             try
@@ -76,7 +83,7 @@
                 return new ContactModel("Empty model");
 
             var person = model.Map();
-            var request = Service.People.UpdateContact(person, model.ModelResourceName);
+            var request = _service.People.UpdateContact(person, model.ModelResourceName);
             request.UpdatePersonFields = PERSON_FIELDS;
 
             try
