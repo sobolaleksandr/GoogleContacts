@@ -30,10 +30,5 @@
                 OnPropertyChanged();
             }
         }
-
-        public virtual void ApplyFrom([NotNull] ContactModel model)
-        {
-
-        }
     }
 }

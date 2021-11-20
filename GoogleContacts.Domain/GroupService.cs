@@ -9,7 +9,7 @@
     using Google.Apis.PeopleService.v1.Data;
     using Google.Apis.Services;
 
-    public class GroupService : IGroupService
+    public class GroupService : IService<GroupModel>
     {
         private readonly ContactGroupsResource _groupsResource;
 

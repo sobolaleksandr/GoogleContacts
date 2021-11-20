@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class GroupServiceMock : IGroupService
+    internal class GroupServiceMock : IService<GroupModel>
     {
         public async Task<ContactModel> Create(GroupModel model)
         {
