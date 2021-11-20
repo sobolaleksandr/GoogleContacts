@@ -7,7 +7,7 @@
 
     using Google.Apis.PeopleService.v1;
 
-    public class PeopleService : IPeopleService
+    public class PeopleService : IService<PersonModel>
     {
         private const string PERSON_FIELDS = "names,emailAddresses,phoneNumbers,organizations,memberships";
 

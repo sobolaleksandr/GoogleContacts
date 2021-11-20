@@ -36,9 +36,9 @@
             CreateServices(isDebug);
         }
 
-        public IGroupService GroupService { get; private set; }
+        public IService<GroupModel> GroupService { get; private set; }
 
-        public IPeopleService PeopleService { get; private set; }
+        public IService<PersonModel> PeopleService { get; private set; }
 
         public void Dispose()
         {

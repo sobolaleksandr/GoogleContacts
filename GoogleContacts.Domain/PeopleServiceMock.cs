@@ -4,7 +4,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class PeopleServiceMock : IPeopleService
+    internal class PeopleServiceMock : IService<PersonModel>
     {
         public async Task<ContactModel> Create(PersonModel model)
         {

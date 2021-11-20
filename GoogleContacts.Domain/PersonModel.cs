@@ -67,7 +67,7 @@
             ModelMembership = new ContactGroupMembership { ContactGroupResourceName = group.ModelResourceName };
         }
 
-        public override void ApplyFrom(ContactModel model)
+        public virtual void ApplyFrom(ContactModel model)
         {
             if (!(model is PersonModel person))
                 return;

@@ -36,7 +36,7 @@
             FormattedName = name;
         }
 
-        public override void ApplyFrom(ContactModel model)
+        public virtual void ApplyFrom(ContactModel model)
         {
             if (!(model is GroupModel group))
                return;

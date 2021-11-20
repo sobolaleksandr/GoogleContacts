@@ -11,9 +11,9 @@
     public abstract class BaseCommand : ICommand
     {
         protected readonly ObservableCollection<ContactModel> Groups;
-        protected readonly IGroupService GroupService;
+        protected readonly IService<GroupModel> GroupService;
         protected readonly ObservableCollection<ContactModel> People;
-        protected readonly IPeopleService PeopleService;
+        protected readonly IService<PersonModel> PeopleService;
 
         protected BaseCommand(ObservableCollection<ContactModel> people,
             ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork)
