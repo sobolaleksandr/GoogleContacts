@@ -10,8 +10,8 @@
 
     public abstract class BaseCommand : ICommand
     {
-        protected ObservableCollection<ContactModel> Groups;
-        protected ObservableCollection<ContactModel> People;
+        protected readonly ObservableCollection<ContactModel> Groups;
+        protected readonly ObservableCollection<ContactModel> People;
 
         protected BaseCommand(ObservableCollection<ContactModel> people,
             ObservableCollection<ContactModel> groups)

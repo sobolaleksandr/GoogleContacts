@@ -4,8 +4,6 @@
 
     using Google.Apis.PeopleService.v1.Data;
 
-    using GoogleContacts.Domain.Annotations;
-
     /// <summary>
     /// Модель группы.
     /// </summary>

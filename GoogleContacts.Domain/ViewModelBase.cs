@@ -3,8 +3,6 @@
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
 
-    using GoogleContacts.Domain.Annotations;
-
     /// <summary>
     /// Базовый класс для моделей представления.
     /// </summary>

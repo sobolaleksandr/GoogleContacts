@@ -64,7 +64,7 @@
                     .Select(person => (ContactModel)new PersonModel(person, string.Empty))
                     .ToList();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return new List<ContactModel>();
             }

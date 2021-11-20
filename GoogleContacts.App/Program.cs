@@ -11,21 +11,15 @@
 
     internal static class Program
     {
-        private static readonly bool Debug = false;
+        private const bool DEBUG = false;
 
+        //TODO:
+        //1. Create UnitOfWork instead of DI services
+        //2. Make 3 projects : domain(models), UI(vms and views), Repo (services and repository)
         [STAThread]
         private static void Main()
         {
-            if (Debug)
-            {
-                NinjectKernel.RebindSingleton<IPeopleService, PeopleServiceMock>();
-                NinjectKernel.RebindSingleton<IGroupService, GroupServiceMock>();
-            }
-            else
-            {
-                NinjectKernel.RebindSingleton<IPeopleService, PeopleService>();
-                NinjectKernel.RebindSingleton<IGroupService, GroupService>();
-            }
+            NewMethod(DEBUG);
 
             var peopleService = NinjectKernel.Get<IPeopleService>();
             var groupService = NinjectKernel.Get<IGroupService>();
@@ -35,10 +29,12 @@
                 var people = Task.Run(async () => await peopleService.Get()).GetAwaiter().GetResult();
                 var groups = Task.Run(async () => await groupService.GetAll()).GetAwaiter().GetResult();
 
+                var viewModel = new ApplicationViewModel(new ObservableCollection<ContactModel>(people),
+                    new ObservableCollection<ContactModel>(groups));
+
                 var window = new MainWindow
                 {
-                    DataContext = new ApplicationViewModel(new ObservableCollection<ContactModel>(people),
-                        new ObservableCollection<ContactModel>(groups))
+                    DataContext = viewModel
                 };
 
                 if (window.ShowDialog() == true)
@@ -52,6 +48,20 @@
                 }
 
                 MessageBox.Show(groupService.GetType() + peopleService.GetType().ToString());
+            }
+        }
+
+        private static void NewMethod(bool value)
+        {
+            if (value)
+            {
+                NinjectKernel.RebindSingleton<IPeopleService, PeopleServiceMock>();
+                NinjectKernel.RebindSingleton<IGroupService, GroupServiceMock>();
+            }
+            else
+            {
+                NinjectKernel.RebindSingleton<IPeopleService, PeopleService>();
+                NinjectKernel.RebindSingleton<IGroupService, GroupService>();
             }
         }
     }

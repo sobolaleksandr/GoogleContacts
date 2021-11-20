@@ -2,8 +2,6 @@
 {
     using System.Collections.ObjectModel;
 
-    using GoogleContacts.Domain.Annotations;
-
     public class ContactModel : ViewModelBase
     {
         private string _name;

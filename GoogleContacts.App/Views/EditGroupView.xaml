@@ -84,10 +84,7 @@
             </TextBox>-->
         </Grid>
 
-        <Button Grid.Row="2" Content="Восстановить"
-                HorizontalAlignment="Left"
-                local:DialogResultButton.DialogResult="True"
-                Command="{Binding RestoreCommand}" CommandParameter="{Binding}" />
+        
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Принять"
                     local:DialogResultButton.DialogResult="True" Command="{Binding ApplyCommand}"

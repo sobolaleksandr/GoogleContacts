@@ -10,28 +10,25 @@
     {
         public async Task<ContactModel> Create(GroupModel model)
         {
-            return new ContactModel(string.Empty);
+            return await Task.FromResult(new ContactModel(string.Empty));
         }
 
         public async Task<string> Delete(GroupModel model)
         {
-            return string.Empty;
+            return await Task.FromResult(string.Empty);
         }
 
         public async Task<List<ContactModel>> GetAll()
         {
-            return Enumerable.Range(100, 10)
+            var models = Enumerable.Range(100, 10)
                 .Select(item => (ContactModel)new GroupModel($"TetsGroup{item}", string.Empty)).ToList();
+
+            return await Task.FromResult(models);
         }
 
         public async Task<ContactModel> Update(GroupModel model)
         {
-            return model;
-        }
-
-        public async Task<ContactModel> Get(string resourceName)
-        {
-            return new ContactModel(string.Empty);
+            return await Task.FromResult(model);
         }
     }
 }

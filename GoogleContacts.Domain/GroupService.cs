@@ -63,26 +63,6 @@
             }
         }
 
-        public async Task<ContactModel> Get(string resourceName)
-        {
-            if (string.IsNullOrEmpty(resourceName))
-                return new ContactModel("Empty resourceName");
-
-            var request = _groupsResource.Get(resourceName);
-
-            try
-            {
-                var response = await request.ExecuteAsync();
-                return response != null
-                    ? new GroupModel(response, string.Empty)
-                    : new ContactModel("There is no such group on server");
-            }
-            catch (Exception exception)
-            {
-                return new ContactModel(exception.ToString());
-            }
-        }
-
         public async Task<List<ContactModel>> GetAll()
         {
             var request = _groupsResource.List();
@@ -94,7 +74,7 @@
                     .Select(group => (ContactModel)new GroupModel(group, string.Empty))
                     .ToList();
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 return new List<ContactModel>();
             }
