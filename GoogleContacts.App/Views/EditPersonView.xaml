@@ -100,7 +100,7 @@
             <ComboBox Grid.Row="5" Grid.Column="1" 
                       ItemsSource="{Binding Groups}"
                       ItemTemplate="{StaticResource TreeViewItemTemplate}"
-                      SelectedItem="{Binding Group}">
+                      SelectedItem="{Binding SelectedGroup}">
             </ComboBox>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">

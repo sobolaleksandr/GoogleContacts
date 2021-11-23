@@ -9,18 +9,31 @@
 
     using GoogleContacts.App.Models;
 
+    /// <summary>
+    /// Сервия для работы с <see cref="PersonModel"/>
+    /// </summary>
     public class PeopleService : IService<PersonModel>
     {
+        /// <summary>
+        /// Поля для запроса данных контакта.
+        /// </summary>
         private const string PERSON_FIELDS = "names,emailAddresses,phoneNumbers,organizations,memberships";
 
+        /// <summary>
+        /// Ресурс для работы с <see cref="PersonModel"/>
+        /// </summary>
         private readonly PeopleServiceService _service;
 
+        /// <summary>
+        /// Сервия для работы с <see cref="PersonModel"/>
+        /// </summary>
+        /// <param name="service"> Ресурс для работы с <see cref="PersonModel"/> </param>
         public PeopleService(PeopleServiceService service)
         {
             _service = service;
         }
 
-        public async Task<ContactModel> Create(PersonModel model)
+        public async Task<ContactModel> CreateAsync(PersonModel model)
         {
             if (model == null)
                 return new ContactModel("Empty model");
@@ -41,12 +54,12 @@
             }
         }
 
-        public async Task<string> Delete(PersonModel model)
+        public async Task<string> DeleteAsync(PersonModel model)
         {
             if (model == null)
                 return "Empty model";
 
-            var request = _service.People.DeleteContact(model.ModelResourceName);
+            var request = _service.People.DeleteContact(model.ResourceName);
 
             try
             {
@@ -59,7 +72,7 @@
             }
         }
 
-        public async Task<List<ContactModel>> Get()
+        public async Task<List<ContactModel>> GetAsync()
         {
             var request = _service.People.Connections.List("people/me");
             request.PersonFields = PERSON_FIELDS;
@@ -78,13 +91,13 @@
             }
         }
 
-        public async Task<ContactModel> Update(PersonModel model)
+        public async Task<ContactModel> UpdateAsync(PersonModel model)
         {
             if (model == null)
                 return new ContactModel("Empty model");
 
             var person = model.Map();
-            var request = _service.People.UpdateContact(person, model.ModelResourceName);
+            var request = _service.People.UpdateContact(person, model.ResourceName);
             request.UpdatePersonFields = PERSON_FIELDS;
 
             try

@@ -4,19 +4,28 @@
 
     using GoogleContacts.App.Models;
 
+    /// <summary>
+    /// Вью-модель <see cref="GroupModel"/>
+    /// </summary>
     public class GroupViewModel : ViewModelBase, IDataErrorInfo
     {
+        /// <summary>
+        /// Поле свойства <see cref="Name"/>
+        /// </summary>
         private string _name;
 
-        public GroupViewModel()
+        /// <summary>
+        /// Вью-модель <see cref="GroupModel"/>
+        /// </summary>
+        /// <param name="name"> Наименование. </param>
+        public GroupViewModel(string name)
         {
+            Name = name;
         }
 
-        public GroupViewModel(GroupModel group)
-        {
-            Name = group.FormattedName;
-        }
-
+        /// <summary>
+        /// Наименование.
+        /// </summary>
         public string Name
         {
             get => _name;
@@ -27,8 +36,14 @@
             }
         }
 
+        /// <summary>
+        /// Наименование атрибута <see cref="Name"/>
+        /// </summary>
         public static string NameTitle => "Имя";
 
+        /// <summary>
+        /// Заголовок окна. 
+        /// </summary>
         public static string WindowTitle => "Окно редактирования группы";
 
         public string Error => this[nameof(Name)];

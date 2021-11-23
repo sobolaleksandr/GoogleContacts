@@ -9,8 +9,18 @@
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
 
+    /// <summary>
+    /// Команда создания контакта.
+    /// </summary>
     public class CreatePersonCommand : BaseCommand
     {
+        /// <summary>
+        /// Команда создания контакта.
+        /// </summary>
+        /// <param name="people"> Контакты. </param>
+        /// <param name="groups"> Группы контактов. </param>
+        /// <param name="unitOfWork"> Единица работы. </param>
+        /// <param name="updateFunction"> Функция обновления UI. </param>
         public CreatePersonCommand(ObservableCollection<ContactModel> people,
             ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork, Func<Task> updateFunction) : base(people,
             groups, unitOfWork, updateFunction)
@@ -29,8 +39,8 @@
                 return;
 
             var personModel = new PersonModel(vm, string.Empty);
-            var result = await PeopleService.Create(personModel);
-            Update(result);
+            var result = await PeopleService.CreateAsync(personModel);
+            UpdateAsync(result);
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿namespace GoogleContacts.App.Views
 {
+    /// <summary>
+    /// Окно редактирования атрибутов группы.
+    /// </summary>
     public partial class EditGroupView
     {
-        //TODO: Add additional parameters for view
         public EditGroupView()
         {
             InitializeComponent();

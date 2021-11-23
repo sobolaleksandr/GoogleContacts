@@ -5,7 +5,7 @@
     using System.Windows.Input;
 
     /// <summary>
-    /// Команда принятия изменений примитива.
+    /// Команда принятия изменений.
     /// </summary>
     public class ApplyCommand : ICommand
     {

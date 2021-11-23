@@ -7,6 +7,9 @@
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
 
+    /// <summary>
+    /// GoogleContacts.
+    /// </summary>
     internal static class Program
     {
         private const bool DEBUG = false;
@@ -18,7 +21,7 @@
             while (true)
             {
                 var viewModel = new ApplicationViewModel(unitOfWork);
-                Task.Run(async () => await viewModel.UploadData()).GetAwaiter().GetResult();
+                Task.Run(async () => await viewModel.UpdateAsync()).GetAwaiter().GetResult();
 
                 var window = new MainWindow
                 {
