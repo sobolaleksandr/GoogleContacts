@@ -8,7 +8,7 @@
     using GoogleContacts.App.Services;
 
     public class ApplicationViewModel
-    {
+    { 
         private readonly ObservableCollection<ContactModel> _groups;
         private readonly ObservableCollection<ContactModel> _people;
         private readonly UnitOfWork _unitOfWork;
@@ -48,8 +48,8 @@
 
             var people = await peopleService.Get();
             var groups = await groupService.Get();
-
-            _groups.Clear();
+          
+             _groups.Clear();
             foreach (var group in groups)
             {
                 _groups.Add(group);

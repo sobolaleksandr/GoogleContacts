@@ -10,7 +10,6 @@
 
         public GroupViewModel()
         {
-
         }
 
         public GroupViewModel(GroupModel group)

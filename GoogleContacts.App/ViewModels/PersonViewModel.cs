@@ -114,8 +114,10 @@
 
         public static string WindowTitle => "Окно редактирования контакта";
 
+
         public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
                                this[nameof(Group)] + this[nameof(Organization)];
+
 
         public string this[string columnName]
         {
@@ -148,6 +150,7 @@
                         if (string.IsNullOrEmpty(Organization))
                             error = $"Поле {OrganizationTitle} не должно быть пустым!";
                         break;
+
                 }
 
                 return error;

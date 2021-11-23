@@ -28,15 +28,15 @@
             switch (selectedContact)
             {
                 case PersonModel selectedPerson:
-                {
-                    await EditPerson(selectedPerson);
-                    return;
-                }
+                    {
+                        await EditPerson(selectedPerson);
+                        return;
+                    }
                 case GroupModel selectedGroup:
-                {
-                    await EditGroup(selectedGroup);
-                    return;
-                }
+                    {
+                        await EditGroup(selectedGroup);
+                        return;
+                    }
             }
         }
 
