@@ -9,9 +9,8 @@
 
     public class DeleteCommand : EditCommandBase
     {
-        public DeleteCommand(ObservableCollection<ContactModel> people,
-            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork, Func<Task> updateFunction) : base(
-            people, groups, unitOfWork, updateFunction)
+        public DeleteCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
+            UnitOfWork unitOfWork, Func<Task> updateFunction) : base(people, groups, unitOfWork, updateFunction)
         {
         }
 

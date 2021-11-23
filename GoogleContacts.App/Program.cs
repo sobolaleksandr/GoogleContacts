@@ -17,8 +17,8 @@
             using var unitOfWork = new UnitOfWork(DEBUG);
             while (true)
             {
-                var viewModel = new ApplicationViewModel();
-                Task.Run(async () => await viewModel.UploadData(unitOfWork)).GetAwaiter().GetResult();
+                var viewModel = new ApplicationViewModel(unitOfWork);
+                Task.Run(async () => await viewModel.UploadData()).GetAwaiter().GetResult();
 
                 var window = new MainWindow
                 {

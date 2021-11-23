@@ -32,6 +32,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Content="{Binding EmailTitle}" 
                    Style="{StaticResource LabelStyle}" />
@@ -82,9 +83,21 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-            <Label Grid.Row="4" Grid.Column="0" Content="{Binding GroupTitle}" 
+            <Label Grid.Row="4" Grid.Column="0" Content="{Binding OrganizationTitle}" 
+                   Style="{StaticResource LabelStyle}" />
+            <TextBox Grid.Row="4" Grid.Column="1" 
+                     Validation.ErrorTemplate="{StaticResource ValidationFailed}">
+                <TextBox.Text>
+                    <Binding Path="Organization" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                        <Binding.ValidationRules>
+                            <DataErrorValidationRule />
+                        </Binding.ValidationRules>
+                    </Binding>
+                </TextBox.Text>
+            </TextBox>
+            <Label Grid.Row="5" Grid.Column="0" Content="{Binding GroupTitle}" 
                    Style="{StaticResource LabelStyle}"/>
-            <ComboBox Grid.Row="4" Grid.Column="1" 
+            <ComboBox Grid.Row="5" Grid.Column="1" 
                       ItemsSource="{Binding Groups}"
                       ItemTemplate="{StaticResource TreeViewItemTemplate}"
                       SelectedItem="{Binding Group}">

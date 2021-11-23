@@ -8,42 +8,58 @@
     using GoogleContacts.App.Services;
 
     public class ApplicationViewModel
-    {
-        public ObservableCollection<ContactModel> Contacts { get; } = new ObservableCollection<ContactModel>();
-        public CreateGroupCommand CreateGroupCommand { get; private set; }
-        public CreatePersonCommand CreatePersonCommand { get; private set; }
-        public DeleteCommand DeleteCommand { get; private set; }
-        public EditCommand EditCommand { get; private set; }
+    { 
+        private readonly ObservableCollection<ContactModel> _groups;
+        private readonly ObservableCollection<ContactModel> _people;
+        private readonly UnitOfWork _unitOfWork;
+
+        public ApplicationViewModel(UnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+            _people = new ObservableCollection<ContactModel>();
+            _groups = new ObservableCollection<ContactModel>();
+            Contacts = new ObservableCollection<ContactModel>
+            {
+                new ContactModel(string.Empty) { Name = "Контакты", Contacts = _people },
+                new ContactModel(string.Empty) { Name = "Группы", Contacts = _groups }
+            };
+
+            DeleteCommand = new DeleteCommand(_people, _groups, unitOfWork, UploadData);
+            EditCommand = new EditCommand(_people, _groups, unitOfWork, UploadData);
+            CreatePersonCommand = new CreatePersonCommand(_people, _groups, unitOfWork, UploadData);
+            CreateGroupCommand = new CreateGroupCommand(_people, _groups, unitOfWork, UploadData);
+        }
+
+        public ObservableCollection<ContactModel> Contacts { get; }
+        public CreateGroupCommand CreateGroupCommand { get; }
+        public CreatePersonCommand CreatePersonCommand { get; }
+        public DeleteCommand DeleteCommand { get; }
+        public EditCommand EditCommand { get; }
 
         /// <summary>
         /// Заголовок окна.
         /// </summary>
         public static string WindowTitle => "GoogleContacts";
 
-        public async Task UploadData(UnitOfWork unitOfWork)
+        public async Task UploadData()
         {
-            var peopleService = unitOfWork.PeopleService;
-            var groupService = unitOfWork.GroupService;
+            var peopleService = _unitOfWork.PeopleService;
+            var groupService = _unitOfWork.GroupService;
 
-            var people = new ObservableCollection<ContactModel>(await peopleService.Get());
-            var groups = new ObservableCollection<ContactModel>(await groupService.Get());
-
-            Contacts.Clear();
-            Contacts.Add(new ContactModel(string.Empty)
+            var people = await peopleService.Get();
+            var groups = await groupService.Get();
+          
+             _groups.Clear();
+            foreach (var group in groups)
             {
-                Name = "Контакты",
-                Contacts = people
-            });
-            Contacts.Add(new ContactModel(string.Empty)
-            {
-                Name = "Группы",
-                Contacts = groups
-            });
+                _groups.Add(group);
+            }
 
-            DeleteCommand = new DeleteCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
-            EditCommand = new EditCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
-            CreatePersonCommand = new CreatePersonCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
-            CreateGroupCommand = new CreateGroupCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
+            _people.Clear();
+            foreach (var person in people)
+            {
+                _people.Add(person);
+            }
         }
     }
 }

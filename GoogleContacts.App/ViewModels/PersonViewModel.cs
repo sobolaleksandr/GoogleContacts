@@ -12,6 +12,7 @@
         private string _familyName;
         private string _givenName;
         private ContactModel _group;
+        private string _organization;
         private string _phoneNumber;
 
         public PersonViewModel(PersonModel person, ObservableCollection<ContactModel> groups) : this(groups)
@@ -20,7 +21,8 @@
             PhoneNumber = person.PhoneNumber;
             GivenName = person.GivenName;
             FamilyName = person.FamilyName;
-            var groupResourceName = person.ModelMembership?.ContactGroupResourceName;
+            Organization = person.Organization;
+            var groupResourceName = person.Membership?.ContactGroupResourceName;
             if (groupResourceName == null)
                 return;
 
@@ -86,6 +88,18 @@
 
         public static string GroupTitle => "Группы";
 
+        public string Organization
+        {
+            get => _organization;
+            set
+            {
+                _organization = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public static string OrganizationTitle => "Организация";
+
         public string PhoneNumber
         {
             get => _phoneNumber;
@@ -100,7 +114,10 @@
 
         public static string WindowTitle => "Окно редактирования контакта";
 
-        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] + this[nameof(Group)];
+
+        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
+                               this[nameof(Group)] + this[nameof(Organization)];
+
 
         public string this[string columnName]
         {
@@ -129,6 +146,11 @@
                     case nameof(Group):
                         error = string.Empty;
                         break;
+                    case nameof(Organization):
+                        if (string.IsNullOrEmpty(Organization))
+                            error = $"Поле {OrganizationTitle} не должно быть пустым!";
+                        break;
+
                 }
 
                 return error;
