@@ -1,15 +1,19 @@
 ﻿namespace GoogleContacts.App.Commands
 {
+    using System;
     using System.Collections.ObjectModel;
+    using System.Threading.Tasks;
 
+    using GoogleContacts.App.Models;
+    using GoogleContacts.App.Services;
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
-    using GoogleContacts.Domain;
 
     public class CreateGroupCommand : BaseCommand
     {
-        public CreateGroupCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
-            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
+        public CreateGroupCommand(ObservableCollection<ContactModel> people,
+            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork, Func<Task> updateFunction) : base(
+            people, groups, unitOfWork, updateFunction)
         {
         }
 
@@ -26,8 +30,7 @@
 
             var groupModel = new GroupModel(vm.Name, string.Empty);
             var result = await GroupService.Create(groupModel);
-            if (ValidateResult(result))
-                await UpdateGroups();
+            Update(result);
         }
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Services
 {
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+
+    using Google.Apis.PeopleService.v1.Data;
+
+    using GoogleContacts.App.Models;
 
     internal class PeopleServiceMock : IService<PersonModel>
     {
@@ -18,12 +22,9 @@
 
         public async Task<List<ContactModel>> Get()
         {
-            var models = Enumerable.Range(0, 10)
-                .Select(item =>
-                    (ContactModel)new PersonModel($"Test{item}", $"Test{item}", $"Test{item}", $"Test{item}",
-                        new ContactModel(string.Empty),
-                        string.Empty))
-                .ToList();
+            var models = Enumerable.Range(0, 10).Select(item =>
+                (ContactModel)new PersonModel(new Person(), string.Empty) { Name = $"TestPerson{item}" }).ToList();
+
             return await Task.FromResult(models);
         }
 

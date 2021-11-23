@@ -1,4 +1,4 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Services
 {
     using System;
     using System.Threading;
@@ -6,6 +6,8 @@
     using Google.Apis.Auth.OAuth2;
     using Google.Apis.PeopleService.v1;
     using Google.Apis.Services;
+
+    using GoogleContacts.App.Models;
 
     public class UnitOfWork : IDisposable
     {

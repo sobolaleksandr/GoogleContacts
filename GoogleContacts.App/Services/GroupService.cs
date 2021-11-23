@@ -1,4 +1,4 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Services
 {
     using System;
     using System.Collections.Generic;
@@ -8,6 +8,8 @@
     using Google.Apis.PeopleService.v1;
     using Google.Apis.PeopleService.v1.Data;
     using Google.Apis.Services;
+
+    using GoogleContacts.App.Models;
 
     public class GroupService : IService<GroupModel>
     {

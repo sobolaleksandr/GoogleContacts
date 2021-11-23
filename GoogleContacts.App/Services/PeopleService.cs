@@ -1,4 +1,4 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Services
 {
     using System;
     using System.Collections.Generic;
@@ -6,6 +6,8 @@
     using System.Threading.Tasks;
 
     using Google.Apis.PeopleService.v1;
+
+    using GoogleContacts.App.Models;
 
     public class PeopleService : IService<PersonModel>
     {
@@ -18,7 +20,6 @@
             _service = service;
         }
 
-        //TODO: cancelation token
         public async Task<ContactModel> Create(PersonModel model)
         {
             if (model == null)
@@ -89,7 +90,9 @@
             try
             {
                 var response = await request.ExecuteAsync();
-                return new PersonModel(response, string.Empty);
+                return response != null
+                    ? new PersonModel(response, string.Empty)
+                    : new ContactModel("Unexpected error");
             }
             catch (Exception exception)
             {

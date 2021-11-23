@@ -1,6 +1,8 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Models
 {
     using System.Collections.ObjectModel;
+
+    using GoogleContacts.App.ViewModels;
 
     public class ContactModel : ViewModelBase
     {

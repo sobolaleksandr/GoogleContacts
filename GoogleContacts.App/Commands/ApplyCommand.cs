@@ -1,4 +1,4 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Commands
 {
     using System;
     using System.ComponentModel;
@@ -21,10 +21,6 @@
 
         public void Execute(object parameter)
         {
-            if (!(parameter is ViewModelBase vm))
-                return;
-
-            vm.IsChanged = true;
         }
 
         public void RaiseCanExecuteChanged()

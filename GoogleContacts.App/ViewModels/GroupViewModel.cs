@@ -2,7 +2,7 @@
 {
     using System.ComponentModel;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
 
     public class GroupViewModel : ViewModelBase, IDataErrorInfo
     {

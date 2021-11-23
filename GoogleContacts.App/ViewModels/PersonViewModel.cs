@@ -4,13 +4,15 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
 
     public sealed class PersonViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _email;
         private string _familyName;
         private string _givenName;
+        private ContactModel _group;
+        private string _organization;
         private string _phoneNumber;
 
         public PersonViewModel(PersonModel person, ObservableCollection<ContactModel> groups) : this(groups)
@@ -19,7 +21,8 @@
             PhoneNumber = person.PhoneNumber;
             GivenName = person.GivenName;
             FamilyName = person.FamilyName;
-            var groupResourceName = person.ModelMembership?.ContactGroupResourceName;
+            Organization = person.Organization;
+            var groupResourceName = person.Membership?.ContactGroupResourceName;
             if (groupResourceName == null)
                 return;
 
@@ -71,9 +74,31 @@
 
         public static string GivenNameTitle => "Имя";
 
+        public ContactModel Group
+        {
+            get => _group;
+            set
+            {
+                _group = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<ContactModel> Groups { get; set; }
 
         public static string GroupTitle => "Группы";
+
+        public string Organization
+        {
+            get => _organization;
+            set
+            {
+                _organization = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public static string OrganizationTitle => "Организация";
 
         public string PhoneNumber
         {
@@ -89,7 +114,8 @@
 
         public static string WindowTitle => "Окно редактирования контакта";
 
-        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)];
+        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] +
+                               this[nameof(Group)] + this[nameof(Organization)];
 
         public string this[string columnName]
         {
@@ -114,6 +140,13 @@
                     case nameof(GivenName):
                         if (string.IsNullOrEmpty(GivenName))
                             error = $"Поле {GivenNameTitle} не должно быть пустым!";
+                        break;
+                    case nameof(Group):
+                        error = string.Empty;
+                        break;
+                    case nameof(Organization):
+                        if (string.IsNullOrEmpty(Organization))
+                            error = $"Поле {OrganizationTitle} не должно быть пустым!";
                         break;
                 }
 

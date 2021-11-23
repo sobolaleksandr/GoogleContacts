@@ -1,4 +1,4 @@
-﻿namespace GoogleContacts.Domain
+﻿namespace GoogleContacts.App.Models
 {
     using System;
 
@@ -9,24 +9,22 @@
     /// </summary>
     public class GroupModel : ContactModel
     {
-        private int _memberCount;
+        private readonly int _memberCount;
 
-        public GroupModel([NotNull] ContactGroup group, string error) : base(error)
+        public GroupModel(ContactGroup group, string error) : base(error)
         {
             if (group == null)
                 throw new ArgumentNullException(nameof(group));
 
             ModelResourceName = group.ResourceName;
             ModelEtag = group.ETag;
-            FormattedName = group.FormattedName ?? string.Empty;
             _memberCount = group.MemberCount ?? 0;
-            Name = FormattedName + " (" + _memberCount + ")";
+            ApplyFrom(group.FormattedName ?? string.Empty);
         }
 
         public GroupModel(string name, string error) : base(error)
         {
-            FormattedName = name;
-            Name = FormattedName + " (" + _memberCount + ")";
+            ApplyFrom(name);
         }
 
         public string FormattedName { get; private set; }
@@ -34,17 +32,6 @@
         public void ApplyFrom(string name)
         {
             FormattedName = name;
-        }
-
-        public virtual void ApplyFrom(ContactModel model)
-        {
-            if (!(model is GroupModel group))
-               return;
-
-            ModelResourceName = group.ModelResourceName;
-            ModelEtag = group.ModelEtag;
-            FormattedName = group.FormattedName;
-            _memberCount = group._memberCount;
             Name = FormattedName + " (" + _memberCount + ")";
         }
 

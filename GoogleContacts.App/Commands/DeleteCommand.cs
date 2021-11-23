@@ -1,32 +1,29 @@
 ﻿namespace GoogleContacts.App.Commands
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Threading.Tasks;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
+    using GoogleContacts.App.Services;
 
     public class DeleteCommand : EditCommandBase
     {
         public DeleteCommand(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
-            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
+            UnitOfWork unitOfWork, Func<Task> updateFunction) : base(people, groups, unitOfWork, updateFunction)
         {
         }
 
         protected override async Task EditGroup(GroupModel selectedGroup)
         {
             var result = await GroupService.Delete(selectedGroup);
-            if (ValidateError(result))
-                Groups.Remove(selectedGroup);
+            Update(result);
         }
 
         protected override async Task EditPerson(PersonModel selectedPerson)
         {
             var result = await PeopleService.Delete(selectedPerson);
-            if (!ValidateError(result))
-                return;
-
-            People.Remove(selectedPerson);
-            await UpdateGroups();
+            Update(result);
         }
     }
 }

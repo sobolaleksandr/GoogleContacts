@@ -1,6 +1,5 @@
 ﻿namespace GoogleContacts.App.ViewModels
 {
-    using GoogleContacts.Domain;
 
     /// <summary>
     /// Базовая вью-модель с результатом диалога.

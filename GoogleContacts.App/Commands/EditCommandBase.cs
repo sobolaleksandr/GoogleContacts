@@ -1,15 +1,18 @@
 ﻿namespace GoogleContacts.App.Commands
 {
+    using System;
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Threading.Tasks;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
+    using GoogleContacts.App.Services;
 
     public abstract class EditCommandBase : BaseCommand
     {
-        protected EditCommandBase(ObservableCollection<ContactModel> people, ObservableCollection<ContactModel> groups,
-            UnitOfWork unitOfWork) : base(people, groups, unitOfWork)
+        protected EditCommandBase(ObservableCollection<ContactModel> people,
+            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork, Func<Task> updateFunction) : base(
+            people, groups, unitOfWork, updateFunction)
         {
         }
 
