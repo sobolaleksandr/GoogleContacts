@@ -32,11 +32,27 @@
         <Border Grid.Row="0" Grid.Column="1" Background="LightGreen" />
         <Border Grid.Row="1" Grid.Column="1" Background="LightBlue" />
 
-        <TreeView Grid.Row="0" Grid.Column="0" DockPanel.Dock="Left"
-                  ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}"
+        <TreeView Grid.Row="0" Grid.Column="0"
                   ItemsSource="{Binding Contacts}"
                   ItemTemplate="{StaticResource TreeViewItemTemplate}" 
                   Template="{StaticResource TreeViewTemplate}">
+            <TreeView.ItemContainerStyle>
+                <Style TargetType="{x:Type TreeViewItem}">
+                    <Setter Property="IsSelected"
+                            Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="FontWeight"
+                            Value="Normal" />
+                    <Setter Property="IsExpanded" Value="True" />
+
+                    <Style.Triggers>
+                        <Trigger Property="IsSelected"
+                                 Value="True">
+                            <Setter Property="FontWeight"
+                                    Value="Bold" />
+                        </Trigger>
+                    </Style.Triggers>
+                </Style>
+            </TreeView.ItemContainerStyle>
         </TreeView>
 
         <StackPanel Grid.Column="1" Grid.Row="0">

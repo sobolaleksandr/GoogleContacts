@@ -3,17 +3,14 @@
     using System;
     using System.Threading.Tasks;
 
+    using GoogleContacts.App.Services;
     using GoogleContacts.App.ViewModels;
     using GoogleContacts.App.Views;
-    using GoogleContacts.Domain;
 
     internal static class Program
     {
         private const bool DEBUG = false;
 
-        //TODO:
-        //1. Create UnitOfWork instead of DI services
-        //2. Make 3 projects : domain(models), UI(vms and views), Repo (services and repository)
         [STAThread]
         private static void Main()
         {

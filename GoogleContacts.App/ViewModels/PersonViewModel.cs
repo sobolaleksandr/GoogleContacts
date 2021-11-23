@@ -4,13 +4,14 @@
     using System.ComponentModel;
     using System.Linq;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
 
     public sealed class PersonViewModel : ViewModelBase, IDataErrorInfo
     {
         private string _email;
         private string _familyName;
         private string _givenName;
+        private ContactModel _group;
         private string _phoneNumber;
 
         public PersonViewModel(PersonModel person, ObservableCollection<ContactModel> groups) : this(groups)
@@ -71,6 +72,16 @@
 
         public static string GivenNameTitle => "Имя";
 
+        public ContactModel Group
+        {
+            get => _group;
+            set
+            {
+                _group = value;
+                OnPropertyChanged();
+            }
+        }
+
         public ObservableCollection<ContactModel> Groups { get; set; }
 
         public static string GroupTitle => "Группы";
@@ -89,7 +100,7 @@
 
         public static string WindowTitle => "Окно редактирования контакта";
 
-        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)];
+        public string Error => this[nameof(Email)] + this[nameof(FamilyName)] + this[nameof(PhoneNumber)] + this[nameof(Group)];
 
         public string this[string columnName]
         {
@@ -114,6 +125,9 @@
                     case nameof(GivenName):
                         if (string.IsNullOrEmpty(GivenName))
                             error = $"Поле {GivenNameTitle} не должно быть пустым!";
+                        break;
+                    case nameof(Group):
+                        error = string.Empty;
                         break;
                 }
 

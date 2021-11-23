@@ -4,11 +4,12 @@
     using System.Threading.Tasks;
 
     using GoogleContacts.App.Commands;
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
+    using GoogleContacts.App.Services;
 
     public class ApplicationViewModel
     {
-        public ObservableCollection<ContactModel> Contacts { get; private set; }
+        public ObservableCollection<ContactModel> Contacts { get; } = new ObservableCollection<ContactModel>();
         public CreateGroupCommand CreateGroupCommand { get; private set; }
         public CreatePersonCommand CreatePersonCommand { get; private set; }
         public DeleteCommand DeleteCommand { get; private set; }
@@ -27,24 +28,22 @@
             var people = new ObservableCollection<ContactModel>(await peopleService.Get());
             var groups = new ObservableCollection<ContactModel>(await groupService.Get());
 
-            Contacts = new ObservableCollection<ContactModel>
+            Contacts.Clear();
+            Contacts.Add(new ContactModel(string.Empty)
             {
-                new ContactModel(string.Empty)
-                {
-                    Name = "Контакты",
-                    Contacts = people
-                },
-                new ContactModel(string.Empty)
-                {
-                    Name = "Группы",
-                    Contacts = groups
-                }
-            };
+                Name = "Контакты",
+                Contacts = people
+            });
+            Contacts.Add(new ContactModel(string.Empty)
+            {
+                Name = "Группы",
+                Contacts = groups
+            });
 
-            DeleteCommand = new DeleteCommand(people, groups, unitOfWork);
-            EditCommand = new EditCommand(people, groups, unitOfWork);
-            CreatePersonCommand = new CreatePersonCommand(people, groups, unitOfWork);
-            CreateGroupCommand = new CreateGroupCommand(people, groups, unitOfWork);
+            DeleteCommand = new DeleteCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
+            EditCommand = new EditCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
+            CreatePersonCommand = new CreatePersonCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
+            CreateGroupCommand = new CreateGroupCommand(people, groups, unitOfWork, () => UploadData(unitOfWork));
         }
     }
 }

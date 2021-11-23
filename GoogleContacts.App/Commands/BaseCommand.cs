@@ -6,22 +6,25 @@
     using System.Windows;
     using System.Windows.Input;
 
-    using GoogleContacts.Domain;
+    using GoogleContacts.App.Models;
+    using GoogleContacts.App.Services;
 
     public abstract class BaseCommand : ICommand
     {
+        private readonly Func<Task> _updateFunction;
         protected readonly ObservableCollection<ContactModel> Groups;
         protected readonly IService<GroupModel> GroupService;
         protected readonly ObservableCollection<ContactModel> People;
         protected readonly IService<PersonModel> PeopleService;
 
         protected BaseCommand(ObservableCollection<ContactModel> people,
-            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork)
+            ObservableCollection<ContactModel> groups, UnitOfWork unitOfWork, Func<Task> updateFunction)
         {
             GroupService = unitOfWork.GroupService;
             PeopleService = unitOfWork.PeopleService;
             People = people;
             Groups = groups;
+            _updateFunction = updateFunction;
         }
 
         public bool CanExecute(object parameter)
@@ -33,18 +36,19 @@
 
         public abstract void Execute(object parameter);
 
-        protected async Task UpdateGroups()
+        protected async void Update(ContactModel result)
         {
-            var groups = await GroupService.Get();
-
-            Groups.Clear();
-            foreach (var group in groups)
-            {
-                Groups.Add(group);
-            }
+            if (ValidateResult(result))
+                await _updateFunction();
         }
 
-        protected static bool ValidateError(string error)
+        protected async void Update(string error)
+        {
+            if (ValidateError(error))
+                await _updateFunction();
+        }
+
+        private static bool ValidateError(string error)
         {
             if (string.IsNullOrEmpty(error))
                 return true;
@@ -53,7 +57,7 @@
             return false;
         }
 
-        protected static bool ValidateResult(ContactModel result)
+        private static bool ValidateResult(ContactModel result)
         {
             var error = result.Error;
             return ValidateError(error);

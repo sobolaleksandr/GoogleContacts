@@ -46,48 +46,13 @@
                     </Binding>
                 </TextBox.Text>
             </TextBox>
-
-            <!--<Label Grid.Row="1" Grid.Column="0" Content="{Binding FamilyNameTitle}"
-                   Style="{StaticResource LabelStyle}" />
-            <TextBox Grid.Row="1" Grid.Column="1"
-                     Validation.ErrorTemplate="{StaticResource ValidationFailed}">
-                <TextBox.Text>
-                    <Binding Path="FamilyName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>-->
-            <!--<Label Grid.Row="2" Grid.Column="0" Content="{Binding GivenNameTitle}" Style="{StaticResource LabelStyle}" />
-            <TextBox Grid.Row="2" Grid.Column="1"
-                     Validation.ErrorTemplate="{StaticResource ValidationFailed}">
-                <TextBox.Text>
-                    <Binding Path="GivenName" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>
-            <Label Grid.Row="3" Grid.Column="0" Content="{Binding PhoneNumberTitle}"
-                   Style="{StaticResource LabelStyle}" />
-            <TextBox Grid.Row="3" Grid.Column="1"
-                     Validation.ErrorTemplate="{StaticResource ValidationFailed}">
-                <TextBox.Text>
-                    <Binding Path="PhoneNumber" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
-                        <Binding.ValidationRules>
-                            <DataErrorValidationRule />
-                        </Binding.ValidationRules>
-                    </Binding>
-                </TextBox.Text>
-            </TextBox>-->
         </Grid>
 
-        
+
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Принять"
-                    local:DialogResultButton.DialogResult="True" Command="{Binding ApplyCommand}"
+                    local:DialogResultButton.DialogResult="True" 
+                    Command="{Binding ApplyCommand}"
                     CommandParameter="{Binding}" />
             <Button Content="Закрыть"
                     local:DialogResultButton.DialogResult="False" />

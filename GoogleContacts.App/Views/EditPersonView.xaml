@@ -84,12 +84,11 @@
             </TextBox>
             <Label Grid.Row="4" Grid.Column="0" Content="{Binding GroupTitle}" 
                    Style="{StaticResource LabelStyle}"/>
-            <TreeView Grid.Row="4" Grid.Column="1"
-                      ItemContainerStyle="{StaticResource LibraryTreeViewItemStyle}"
+            <ComboBox Grid.Row="4" Grid.Column="1" 
                       ItemsSource="{Binding Groups}"
-                      ItemTemplate="{StaticResource TreeViewItemTemplate}" 
-                      Template="{StaticResource TreeViewTemplate}">
-            </TreeView>
+                      ItemTemplate="{StaticResource TreeViewItemTemplate}"
+                      SelectedItem="{Binding Group}">
+            </ComboBox>
         </Grid>
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Content="Принять"
