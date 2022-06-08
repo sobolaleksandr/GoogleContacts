@@ -53,7 +53,7 @@
             GivenName = person.GivenName;
             FamilyName = person.FamilyName;
             Organization = person.Organization;
-            var groupResourceName = person.Membership?.ContactGroupResourceName;
+            var groupResourceName = person.GroupResourceName;
             if (string.IsNullOrEmpty(groupResourceName))
                 return;
 

@@ -36,7 +36,7 @@
             PhoneNumber = phoneNumber?.Value ?? string.Empty;
             Email = email?.Value ?? string.Empty;
             Organization = organization?.Name ?? string.Empty;
-            Membership = membership?.ContactGroupMembership;
+            GroupResourceName = membership?.ContactGroupMembership.ContactGroupResourceName;
             Name = GivenName + " (" + PhoneNumber + ")";
         }
 
@@ -68,7 +68,7 @@
         /// <summary>
         /// Членство в группах.
         /// </summary>
-        public ContactGroupMembership Membership { get; private set; }
+        public string GroupResourceName { get; private set; }
 
         /// <summary>
         /// Организация. 
@@ -96,7 +96,7 @@
             if (string.IsNullOrEmpty(groupResourceName))
                 return;
 
-            Membership = new ContactGroupMembership { ContactGroupResourceName = groupResourceName };
+            GroupResourceName = groupResourceName;
         }
 
         /// <summary>
@@ -113,7 +113,13 @@
                 PhoneNumbers = new List<PhoneNumber> { new PhoneNumber { Value = PhoneNumber } },
                 EmailAddresses = new List<EmailAddress> { new EmailAddress { Value = Email } },
                 Organizations = new List<Organization> { new Organization { Name = Organization } },
-                Memberships = new List<Membership> { new Membership { ContactGroupMembership = Membership } }
+                Memberships = new List<Membership>
+                {
+                    new Membership
+                    {
+                        ContactGroupMembership = new ContactGroupMembership { ContactGroupResourceName = GroupResourceName }
+                    }
+                }
             };
         }
     }
